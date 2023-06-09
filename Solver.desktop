@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Name=Solver
+Icon=Solver
+Exec=/usr/bin/sailfish-qml Solver
+
+[X-Sailjail]
+Permissions=UserDirs
+OrganizationName=de.poetaster
+ApplicationName=Solver
