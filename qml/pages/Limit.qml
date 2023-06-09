@@ -30,6 +30,14 @@ Page {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
+            MenuItem {
+                text: "Derivative"
+                onClicked: pageStack.push(Qt.resolvedUrl("Derivative.qml"))
+            }
+            MenuItem {
+                text: "Integral"
+                onClicked: pageStack.push(Qt.resolvedUrl("Integral.qml"))
+            }
         }
         PushUpMenu {
             MenuItem {

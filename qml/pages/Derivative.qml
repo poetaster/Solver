@@ -4,7 +4,7 @@
 
 import QtQuick 2.2
 import Sailfish.Silica 1.0
-import io.thp.pyotherside 1.6
+import io.thp.pyotherside 1.5
 
 Page {
     id: firstPage
@@ -18,6 +18,9 @@ Page {
         //contentHeight: contentItem.childrenRect.height
         height: derivative_Column.height
         width: parent.width
+        /*Component.completed: {
+            result_TextArea.text = resultText
+        }*/
 
         VerticalScrollDecorator { flickable: container }
 
@@ -34,6 +37,14 @@ Page {
             MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+            }
+            MenuItem {
+                text: "Integral"
+                onClicked: pageStack.push(Qt.resolvedUrl("Integral.qml"))
+            }
+            MenuItem {
+                text: "Limit"
+                onClicked: pageStack.push(Qt.resolvedUrl("Limit.qml"))
             }
         }
         PushUpMenu {
@@ -65,6 +76,7 @@ Page {
                 }
 
                 result_TextArea.text = 'Calculating ...'
+
                 py.call('solver.calculate_Derivative', [expression_TextField.text,var1_TextField.text,numVar1_TextField.text,var2_TextField.text,numVar2_TextField.text,var3_TextField.text,numVar3_TextField.text,numColumns,showDerivative,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
                     result_TextArea.text = result;
                 })

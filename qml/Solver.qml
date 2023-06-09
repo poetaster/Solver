@@ -4,13 +4,18 @@
 
 import QtQuick 2.2
 import Sailfish.Silica 1.0
-import io.thp.pyotherside 1.6
+import io.thp.pyotherside 1.5
 import "pages"
 
 
 ApplicationWindow {
     property int orientation_index: 2
+    property int integralType_index : 0
+    property int numerIntegralType_index : 1
+    property int numDimensions_index : 0
+    property bool showIntegral: true
     property bool showDerivative: true
+    property bool showLimit: true
     property bool showTime: true
     property bool numerApprox: false
     property string numDigText: '15'
@@ -35,18 +40,18 @@ ApplicationWindow {
             var pythonpath = Qt.resolvedUrl('python').substr('file://'.length);
             addImportPath(pythonpath);
 
-            //console.log(pythonpath);
+            console.log(pythonpath);
 
             // Asynchronous module importing
             importModule('solver', function() {
-                result_TextArea.text='Python version ' + evaluate('derivative.versionPython') + '.\n'
-                result_TextArea.text+='SymPy version ' + evaluate('derivative.versionSymPy') + '\n'
+                resultText='Python version ' + evaluate('solver.versionPython') + '.\n'
+                resultText+='SymPy version ' + evaluate('solver.versionSymPy') + '\n'
                 timerInfo = evaluate('("loaded in %fs" % solver.loadingtimeSymPy)')
                /*
-                console.log('Python version: ' + evaluate('derivative.versionPython'));
-                result_TextArea.text+='<FONT COLOR="LightGreen">Using Python version ' + evaluate('derivative.versionPython') + '.</FONT>'
-                console.log('SymPy version ' + evaluate('derivative.versionSymPy') + evaluate('(" loaded in %f seconds." % derivative.loadingtimeSymPy)'));
-                result_TextArea.text+='<FONT COLOR="LightGreen">SymPy version ' + evaluate('derivative.versionSymPy') + evaluate('(" loaded in %f seconds." % derivative.loadingtimeSymPy)') + '</FONT><br>'
+                console.log('Python version: ' + evaluate('solver.versionPython'));
+                result_TextArea.text+='<FONT COLOR="LightGreen">Using Python version ' + evaluate('solver.versionPython') + '.</FONT>'
+                console.log('SymPy version ' + evaluate('solver.versionSymPy') + evaluate('(" loaded in %f seconds." % solver.loadingtimeSymPy)'));
+                result_TextArea.text+='<FONT COLOR="LightGreen">SymPy version ' + evaluate('solver.versionSymPy') + evaluate('(" loaded in %f seconds." % solver.loadingtimeSymPy)') + '</FONT><br>'
                 */
             });
         }

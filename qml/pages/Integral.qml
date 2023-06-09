@@ -60,6 +60,14 @@ Page {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
+            MenuItem {
+                text: "Derivative"
+                onClicked: pageStack.push(Qt.resolvedUrl("Derivative.qml"))
+            }
+            MenuItem {
+                text: "Limit"
+                onClicked: pageStack.push(Qt.resolvedUrl("Limit.qml"))
+            }
         }
         PushUpMenu {
             MenuItem {
