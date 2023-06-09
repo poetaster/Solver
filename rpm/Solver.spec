@@ -33,7 +33,6 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 BuildRequires:  python3-base
 BuildRequires:  python3-devel
-BuildRequires:  python3-pip
 BuildRequires:  python3-rpm-macros
 
 
