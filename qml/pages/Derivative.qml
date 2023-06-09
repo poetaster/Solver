@@ -69,7 +69,7 @@ Page {
 
             function calculateResultDerivative() {
                 if (Orientation.Portrait) {
-                    numColumns=42      // Portrait
+                    numColumns=40      // Portrait
                 } else {
                     numColumns=82      // Portrait
 
