@@ -6,6 +6,8 @@
 Name:       Solver
 
 # >> macros
+%define __provides_exclude_from ^%{_datadir}/%{name}/lib/.*\\.so\\>
+%define __requires_exclude_from ^%{_datadir}/%{name}/lib/.*\\.so\\>
 # << macros
 
 %{!?qtc_qmake:%define qtc_qmake %qmake}
@@ -48,7 +50,7 @@ Categories:
 DeveloperName: Mark Washeim (poetaster)
 Custom:
  - Repo: https://github.com/sailfishos-chum/derivative-sailfish
-Icon: https://github.com/sailfishos-chum/derivative-sailfish/blob/c80a621e04bbf247139c393b5776eb717be0e206/Derivative.png
+Icon: https://github.com/poetaster/Solver/blob/6f5085796699b9b71ba3d0609dc4b66de4dab933/icons/172x172/Solver.png
 %endif
 
 

@@ -1,42 +1,64 @@
 /*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
-  All rights reserved.
-
-  You may use this file under the terms of BSD license as follows:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR
-  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  Copyright (C) 2023  Mark Washeim <blueprint@poetaster.de>
 */
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtSensors 5.0
+import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.2
 
 Page {
     id: page
+    function calculateResultIntegral() {
+        result_TextArea.text = 'Calculating ...'
+        py.call('solver.calculate_Integral', [integrand_TextField.text,diff1_TextField.text,diff2_TextField.text,diff3_TextField.text,
+                limSup1_TextField.text,limSup2_TextField.text,limSup3_TextField.text,limInf1_TextField.text,limInf2_TextField.text,limInf3_TextField.text,
+                integralType_index,numDimensions_index+1,numColumns,
+                showIntegral,showTime,numDigText,numerIntegralType_index,simplifyResult_index,outputTypeResult_index], function(result) {
+            result_TextArea.text = result;
+        })
+    }
+    allowedOrientations: derivativeScreenOrientation
+    // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
+    property int _orientation: OrientationReading.TopUp
+    property int _pictureRotation;
 
-    allowedOrientations: integralScreenOrientation
-
+    OrientationSensor {
+        id: orientationSensor
+        active: true
+        onReadingChanged: {
+            if (reading.orientation >= OrientationReading.TopUp
+                    && reading.orientation <= OrientationReading.RightUp) {
+                _orientation = reading.orientation
+                console.log("Orientation:", reading.orientation, _orientation);
+            }
+            switch (reading.orientation) {
+            case OrientationReading.TopUp:
+                _pictureRotation = 0; break
+            case OrientationReading.TopDown:
+                _pictureRotation = 180; break
+            case OrientationReading.LeftUp:
+                _pictureRotation = 270; break
+            case OrientationReading.RightUp:
+                _pictureRotation = 90; break
+            default:
+                // Keep device orientation at previous state
+            }
+        }
+    }
+    onOrientationChanged:  {
+        if (_pictureRotation === 0 || _pictureRotation === 180) {
+            numColumns = 40    // Portrait
+            tAreaH = 1000
+        } else {
+            tAreaH = 450
+            numColumns= 80
+        }
+        console.debug(_pictureRotation)
+        console.debug(numColumns)
+        calculateResultIntegral()
+    }
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         id: container
@@ -44,6 +66,9 @@ Page {
         height: integral_Column.height  //Theme.paddingLarge
         width: page.width
 
+        Component.onCompleted: {
+            cName = "Integral"
+        }
         VerticalScrollDecorator { flickable: container }
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
@@ -88,29 +113,44 @@ Page {
             height:  childrenRect.height
             spacing: Theme.paddingSmall
 
-            function calculateResultIntegral() {
-                var numColumns
-                result_TextArea.text = 'Calculating ...'
-                if (orientation==Orientation.Portrait) {
-                    numColumns=42      // Portrait
-                } else {
-                    if (Math.max(page.height,page.width) > 1000) {
-                        numColumns=100  // Landscape on Nexus 4 smartphone
-                    } else {
-                        numColumns=80  // Landscape on Jolla smartphone
+            PageHeader {
+                title: qsTr("Integral")
+            }
+                FontLoader {
+                    id: dejavusansmono
+                    source: "DejaVuSansMono.ttf"
+                }
+                TextArea {
+                    id: result_TextArea
+                    height: tAreaH
+                    width: parent.width
+                    readOnly: true
+                    font.family: dejavusansmono.name
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    color:'lightblue'
+                    placeholderText: "Integral calculation result"
+                    text : 'Loading Python and SymPy ...'
+                    Component.onCompleted: {
+                        // _editor.textFormat = Text.RichText;
+                    }
+
+                    /* for the cover we hold the value */
+                    onTextChanged: {
+                        console.log(implicitHeight)
+                        resultText = scaleText(text)
+                    }
+                    /* for the cover we scale font px values */
+                    /* on the cover we can use html */
+                    function scaleText(text) {
+                        const txt = '<FONT COLOR="lightblue" SIZE="10px"><pre>'
+                        txt = txt + text + '<pre></FONT>'
+                        return txt
                     }
                 }
-                py.call('solver.calculate_Integral', [integrand_TextField.text,diff1_TextField.text,diff2_TextField.text,diff3_TextField.text,
-                        limSup1_TextField.text,limSup2_TextField.text,limSup3_TextField.text,limInf1_TextField.text,limInf2_TextField.text,limInf3_TextField.text,
-                        integralType_index,numDimensions_index+1,numColumns,
-                        showIntegral,showTime,numDigText,numerIntegralType_index,simplifyResult_index,outputTypeResult_index], function(result) {
-                    result_TextArea.text = result;
-                })
+            Item {
+                anchors.top: result_TextArea.bottom
             }
 
-//            PageHeader {
-//                title: qsTr("Integral")
-//            }
             Row {
                 ComboBox {
                     id: integralType_ComboBox
@@ -329,14 +369,8 @@ Page {
                 width: parent.width*0.60
                 text: qsTr("Calculate")
                 focus: true
-                onClicked: integral_Column.calculateResultIntegral()
+                onClicked: calculateResultIntegral()
             }
-
-            FontLoader {
-                id: dejavusansmono
-                source: "DejaVuSansMono.ttf"
-            }
-
             Label {
                id:timer
                anchors.horizontalCenter: parent.horizontalCenter
@@ -346,76 +380,6 @@ Page {
                color: Theme.highlightColor
             }
 
-            TextArea {
-                id: result_TextArea
-                //height: Math.max(page.width, 800, implicitHeight)
-                width: parent.width
-                readOnly: true
-                font.family: dejavusansmono.name
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color:'lightblue'
-                placeholderText: "Integral calculation result"
-                text : 'Loading Python and SymPy ...'
-                Component.onCompleted: {
-                   // _editor.textFormat = Text.RichText;
-                }
-
-                /* for the cover we hold the value */
-                onTextChanged: {
-                    console.log(implicitHeight)
-                    resultText = scaleText(text)
-                }
-                /* for the cover we scale font px values */
-                /* on the cover we can use html */
-                function scaleText(text) {
-                    const txt = '<FONT COLOR="lightblue" SIZE="10px"><pre>'
-                    txt = txt + text + '<pre></FONT>'
-                    return txt
-                }
-            }
-
-            /*
-            Python {
-                id: py
-
-                Component.onCompleted: {
-                    // Add the Python library directory to the import path
-                    var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
-                    addImportPath(pythonpath);
-                    console.log(pythonpath);
-
-                    setHandler('timerPush', timerPushHandler);
-
-                    // Asynchronous module importing
-                    importModule('integral', function() {
-                        result_TextArea.text='Python version ' + evaluate('integral.versionPython') + '.\n'
-                        result_TextArea.text+='SymPy version ' + evaluate('integral.versionSymPy') + '\n'
-                        timerInfo = evaluate('("loaded in %fs" % integral.loadingtimeSymPy)')
-
-                        //console.log('Python version: ' + evaluate('integral.versionPython'));
-                        //result_TextArea.text+='<FONT COLOR="LightGreen">Using Python version ' + evaluate('integral.versionPython') + '.</FONT>'
-                        //console.log('SymPy version ' + evaluate('integral.versionSymPy') + evaluate('(" loaded in %f seconds." % integral.loadingtimeSymPy)'));
-                        //result_TextArea.text+='<FONT COLOR="LightGreen">SymPy version ' + evaluate('integral.versionSymPy') + evaluate('(" loaded in %f seconds." % integral.loadingtimeSymPy)') + '</FONT><br>'
-                    });
-                }
-
-                // shared via timerInfo with cover
-                function timerPushHandler(pTimer) {
-                    timerInfo =  pTimer + ' elapsed'
-                }
-
-                onError: {
-                    // when an exception is raised, this error handler will be called
-                    console.log('python error: ' + traceback);
-                }
-
-                onReceived: {
-                    // asychronous messages from Python arrive here
-                    // in Python, this can be accomplished via pyotherside.send()
-                    console.log('got message from python: ' + data);
-                }
-            }
-            */
         }
     }
 

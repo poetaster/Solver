@@ -1,14 +1,68 @@
 import QtQuick 2.6
 import Sailfish.Silica 1.0
+import QtSensors 5.0
+import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.2
 
 Page {
     id: page
 
-    allowedOrientations: limitScreenOrientation
-
+    allowedOrientations: derivativeScreenOrientation
     // To enable PullDownMenu, place our content in a SilicaFlickable
+    // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
+    property int _orientation: OrientationReading.TopUp
+    property int _pictureRotation;
+    function calculateResultLimit() {
+        result_TextArea.text = 'Calculating limit...'
+        py.call('solver.calculate_Limit', [expression_TextField.text,variable_TextField.text,point_TextField.text,direction_ComboBox.value,orientation!==Orientation.Landscape,showLimit,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
+            result_TextArea.text = result;
+        })
+    }
+    function copyResult() {
+        result_TextArea.selectAll()
+        result_TextArea.copy()
+        result_TextArea.deselect()
+    }
+    OrientationSensor {
+        id: orientationSensor
+        active: true
+        onReadingChanged: {
+            if (reading.orientation >= OrientationReading.TopUp
+                    && reading.orientation <= OrientationReading.RightUp) {
+                _orientation = reading.orientation
+                console.log("Orientation:", reading.orientation, _orientation);
+            }
+            switch (reading.orientation) {
+            case OrientationReading.TopUp:
+                _pictureRotation = 0; break
+            case OrientationReading.TopDown:
+                _pictureRotation = 180; break
+            case OrientationReading.LeftUp:
+                _pictureRotation = 270; break
+            case OrientationReading.RightUp:
+                _pictureRotation = 90; break
+            default:
+                // Keep device orientation at previous state
+            }
+        }
+    }
+    onOrientationChanged:  {
+        if (_pictureRotation === 0 || _pictureRotation === 180) {
+            numColumns = 40    // Portrait
+            tAreaH = 1000
+        } else {
+            tAreaH = 450
+            numColumns= 80
+        }
+        console.debug(_pictureRotation)
+        console.debug(numColumns)
+        calculateResultDerivative()
+    }
     SilicaFlickable {
+        Component.onCompleted:  {
+            cName = "Limit"
+        }
+
         id: container
         anchors.fill: parent
         //height: contentItem.childrenRect.height
@@ -56,21 +110,36 @@ Page {
             id : limit_Column
             width: page.width
             spacing: Theme.paddingSmall
-
-            function calculateResultLimit() {
-                result_TextArea.text = 'Calculating limit...'
-                py.call('solver.calculate_Limit', [expression_TextField.text,variable_TextField.text,point_TextField.text,direction_ComboBox.value,orientation!==Orientation.Landscape,showLimit,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
-                    result_TextArea.text = result;
-                })
-            }
-            function copyResult() {
-                result_TextArea.selectAll()
-                result_TextArea.copy()
-                result_TextArea.deselect()
-            }
-
             PageHeader {
                 title: qsTr("Limit")
+            }
+            FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
+            TextArea {
+                id: result_TextArea
+
+                height: tAreaH
+                width: parent.width
+                readOnly: true
+                font.family: dejavusansmono.name
+                color: 'lightblue'
+                font.pixelSize: Theme.fontSizeSmallBase
+                text : 'Loading Python and SymPy ...'
+                Component.onCompleted: {
+                    //_editor.textFormat = Text.RichText;
+                }
+
+                /* for the cover we hold the value */
+                onTextChanged: {
+                    console.log(implicitHeight)
+                    resultText = scaleText(text)
+                }
+                /* for the cover we scale font px values */
+                /* on the cover we can use html */
+                function scaleText(text) {
+                    const txt = '<FONT COLOR="lightblue" SIZE="16px"><pre>'
+                    txt = txt + text + '<pre></FONT>'
+                    return txt
+                }
             }
             TextField {
                 id: expression_TextField
@@ -126,7 +195,7 @@ Page {
                     width: parent.width*0.35
                     text: qsTr("Calculate")
                     focus: true
-                    onClicked: limit_Column.calculateResultLimit()
+                    onClicked: calculateResultLimit()
                 }
             }
             Separator {
@@ -135,7 +204,6 @@ Page {
                 width: parent.width*0.9
                 color: Theme.primaryColor
             }
-            FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
 
             Label {
                id:timer
@@ -149,33 +217,7 @@ Page {
                color: Theme.highlightColor
             }
 
-            TextArea {
-                id: result_TextArea
 
-                height: implicitHeight + Theme.paddingLarge //Math.max(page.width, 1080, implicitHeight)
-                width: parent.width
-                readOnly: true
-                font.family: dejavusansmono.name
-                color: 'lightblue'
-                font.pixelSize: Theme.fontSizeSmallBase
-                text : 'Loading Python and SymPy ...'
-                Component.onCompleted: {
-                    //_editor.textFormat = Text.RichText;
-                }
-
-                /* for the cover we hold the value */
-                onTextChanged: {
-                    console.log(implicitHeight)
-                    resultText = scaleText(text)
-                }
-                /* for the cover we scale font px values */
-                /* on the cover we can use html */
-                function scaleText(text) {
-                    const txt = '<FONT COLOR="lightblue" SIZE="16px"><pre>'
-                    txt = txt + text + '<pre></FONT>'
-                    return txt
-                }
-            }
 /*
             Python {
                 id: py

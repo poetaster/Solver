@@ -9,29 +9,18 @@ Page {
 
      Item {
         id: aboutInfos
-        property string version:'0.8.2'
-        property string text: if(orientation === Orientation.Portrait) {
-                                  '<style>a:link { color: ' + Theme.primaryColor  + '; }</style>' +
-                                  'Derivative calculates mathematical<br>derivatives symbolically and numerically<br>(in next versions, also vector derivatives like<br>gradient, divergence, curl and Laplacian).' +
-                                  '<br><br>This version of Derivative is written using<br>Python 3, SymPy, PyOtherSide, Qt5,<br>Qt Quick 2 (Silica Components).' +
-                                  '<br><br>© 2011-2014 by Roberto Colistete Jr.' +
-                                  '<br>Free & Open Source :' +
-                                  '<br><a href="http://www.gnu.org/licenses/lgpl-3.0.html"><b>License LGPLv3</b></a>' +
-                                  '<br><br>For more information, see the web site :' +
-                                  '<br><a href="https://github.com/rcolistete/derivative-sailfish"><b>Derivative</b></a>' +
-                                  '<br><br><FONT COLOR="violet">In l&hearts;ving memory of my wife Lorena</FONT>'
-                               } else {
-                                  '<style>a:link { color: ' + Theme.primaryColor  + '; }</style>' +
-                                  'Derivative calculates mathematical derivatives symbolically<br>and numerically (in next versions, also vector derivatives<br>like gradient, divergence, curl and Laplacian).' +
-                                  '<br><br>This version of Derivative is written using Python 3, SymPy, <br>PyOtherSide, Qt5, Qt Quick 2 (Silica Components).' +
-                                  '<br><br>© 2011-2014 by Roberto Colistete Jr.' +
-                                  '<br>Free & Open Source :' +
-                                  '<br><a href="http://www.gnu.org/licenses/lgpl-3.0.html"><b>License LGPLv3</b></a>' +
-                                  '<br><br>For more information, see the web site :' +
-                                  '<br><a href="https://github.com/rcolistete/derivative-sailfish"><b>Derivative</b></a>' +
-                                  '<br><br><FONT COLOR="violet">In l&hearts;ving memory of my wife Lorena</FONT>'
-                              }
-    }
+        property string version:'0.1.0'
+        property string text:  if(true) {
+                '<style>a:link { color: ' + Theme.primaryColor  + '; }</style>' +
+                        'Solver calculates Derivatives, Integrals and Limits<br>derivatives symbolically and numerically<br>' +
+                        '<br><br>Solver is written using<br>Python 3, SymPy, PyOtherSide, Qt5,<br>Qt Quick 2 (Silica Components).' +
+                        '<br><br>It is based in large part by work from © 2011-2014 by Roberto Colistete Jr.' +
+                        '<br>Free & Open Source :' +
+                        '<br><a href="http://www.gnu.org/licenses/lgpl-3.0.html"><b>License LGPLv3</b></a>' +
+                        '<br><br>Source :' +
+                        '<br><a href="https://github.com/poetaster/Solver"><b>Solver</b></a>'
+            }
+     }
 
     SilicaFlickable {
         id: aboutFlick
@@ -51,11 +40,11 @@ Page {
             spacing: Theme.paddingMedium
 
             PageHeader {
-                title: qsTr('About Derivative')
+                title: qsTr('About Solver')
             }
             Label {
                 id:title
-                text: 'Derivative  v' + aboutInfos.version
+                text: 'Solver  v' + aboutInfos.version
                 font.pixelSize: Theme.fontSizeLarge
                 font.bold: true
                 anchors.horizontalCenter: parent.horizontalCenter

@@ -4,13 +4,60 @@
 
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import QtSensors 5.0
+import QtQuick.Layouts 1.1
+
 import io.thp.pyotherside 1.5
 
 Page {
-    id: firstPage
+    id: derivativePage
 
     allowedOrientations: derivativeScreenOrientation
+    function calculateResultDerivative() {
+        result_TextArea.text = 'Calculating ...'
+        py.call('solver.calculate_Derivative', [expression_TextField.text,var1_TextField.text,numVar1_TextField.text,var2_TextField.text,numVar2_TextField.text,var3_TextField.text,numVar3_TextField.text,numColumns,showDerivative,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
+            result_TextArea.text = result;
+        })
+    }
+    // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
+    property int _orientation: OrientationReading.TopUp
+    property int _pictureRotation;
 
+    OrientationSensor {
+        id: orientationSensor
+        active: true
+        onReadingChanged: {
+            if (reading.orientation >= OrientationReading.TopUp
+                    && reading.orientation <= OrientationReading.RightUp) {
+                _orientation = reading.orientation
+                console.log("Orientation:", reading.orientation, _orientation);
+            }
+            switch (reading.orientation) {
+            case OrientationReading.TopUp:
+                _pictureRotation = 0; break
+            case OrientationReading.TopDown:
+                _pictureRotation = 180; break
+            case OrientationReading.LeftUp:
+                _pictureRotation = 270; break
+            case OrientationReading.RightUp:
+                _pictureRotation = 90; break
+            default:
+                // Keep device orientation at previous state
+            }
+        }
+    }
+    onOrientationChanged:  {
+        if (_pictureRotation === 0 || _pictureRotation === 180) {
+            numColumns = 40    // Portrait
+            tAreaH = 1000
+        } else {
+            tAreaH = 450
+            numColumns= 80
+        }
+        console.debug(_pictureRotation)
+        console.debug(numColumns)
+        calculateResultDerivative()
+    }
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         id: container
@@ -18,13 +65,7 @@ Page {
         //contentHeight: contentItem.childrenRect.height
         height: derivative_Column.height
         width: parent.width
-        /*Component.completed: {
-            result_TextArea.text = resultText
-        }*/
 
-        VerticalScrollDecorator { flickable: container }
-
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
                 text: "About"
@@ -58,33 +99,47 @@ Page {
             }
         }
 
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
         Column {
             id : derivative_Column
-            width: firstPage.width
+            width: derivativePage.width
             height: childrenRect.height
             spacing: Theme.paddingSmall
 
 
-            function calculateResultDerivative() {
-                if (Orientation.Portrait) {
-                    numColumns=40      // Portrait
-                } else {
-                    numColumns=82      // Portrait
-
-                }
-
-                result_TextArea.text = 'Calculating ...'
-
-                py.call('solver.calculate_Derivative', [expression_TextField.text,var1_TextField.text,numVar1_TextField.text,var2_TextField.text,numVar2_TextField.text,var3_TextField.text,numVar3_TextField.text,numColumns,showDerivative,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
-                    result_TextArea.text = result;
-                })
-            }
-
             PageHeader {
                 title: qsTr("Derivative")
             }
+
+            FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
+            TextArea {
+                id: result_TextArea
+                height: tAreaH
+                width: parent.width
+                anchors {
+                }
+
+                //height: 3000
+                readOnly: true
+                font.family: dejavusansmono.name
+                font.pixelSize: Theme.fontSizeExtraSmall
+                text : 'Loading Python and SymPy, it takes some seconds...'
+                color: 'lightblue'
+                Component.onCompleted: {
+                    //_editor.textFormat = Text.RichText;
+                }
+                /* for the cover we hold the value */
+                onTextChanged: {
+                    resultText = scaleText(text)
+                }
+                /* for the cover we scale font px values */
+                /* on the cover we can use html */
+                function scaleText(text) {
+                    const txt = '<FONT COLOR="lightblue" SIZE="10px"><pre>'
+                    txt = txt + text + '<pre></FONT>'
+                    return txt
+                }
+            }
+// Try top
             TextField {
                 id: expression_TextField
                 width: parent.width
@@ -178,7 +233,7 @@ Page {
                 width: parent.width*0.60
                 text: qsTr("Calculate")
                 focus: true
-                onClicked: derivative_Column.calculateResultDerivative()
+                onClicked: calculateResultDerivative()
             }
             Separator {
                 id : derivative_Separator
@@ -186,7 +241,6 @@ Page {
                 width: parent.width*0.9
                 color: Theme.primaryColor
             }
-            FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
 
             Label {
                id:timer
@@ -195,32 +249,8 @@ Page {
                text: timerInfo
                color: Theme.highlightColor
             }
-
-            TextArea {
-                id: result_TextArea
-                //height: Math.max(firstPage.width, 600, implicitHeight)
-                width: parent.width
-                readOnly: true
-                font.family: dejavusansmono.name
-                font.pixelSize: Theme.fontSizeExtraSmall
-                text : 'Loading Python and SymPy, it takes some seconds...'
-                color: 'lightblue'
-                Component.onCompleted: {
-                    //_editor.textFormat = Text.RichText;
-                }
-                /* for the cover we hold the value */
-                onTextChanged: {
-                    resultText = scaleText(text)
-                }
-                /* for the cover we scale font px values */
-                /* on the cover we can use html */
-                function scaleText(text) {
-                    const txt = '<FONT COLOR="lightblue" SIZE="10px"><pre>'
-                    txt = txt + text + '<pre></FONT>'
-                    return txt
-                }
-            }
-
         }
+        VerticalScrollDecorator { flickable: derivative_Column }
     }
+
 }

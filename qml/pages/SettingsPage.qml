@@ -5,7 +5,6 @@ Page {
     id: settingsPage
 
     allowedOrientations: derivativeScreenOrientation
-
     SilicaFlickable {
         id: setttingsFlick
         anchors.fill: parent
@@ -62,12 +61,27 @@ Page {
                 onCheckedChanged : { showDerivative = checked }
             }
             TextSwitch {
+                id: showLimit_TextSwitch
+                text: qsTr("Show not calculated limit")
+                description: qsTr("before Limit result")
+                checked: showLimit
+                onCheckedChanged : { showLimit = checked }
+            }
+            TextSwitch {
+                id: showIntegral_TextSwitch
+                text: qsTr("Show not calculated integral")
+                description: qsTr("before integral result")
+                checked: showIntegral
+                onCheckedChanged : { showIntegral = checked }
+            }
+            /*
+            TextSwitch {
                 id: showTime_TextSwitch
                 text: qsTr("Show calculation time")
                 description: qsTr("before derivative result")
                 checked: showTime
                 onCheckedChanged : { showTime = checked }
-            }
+            }*/
             TextSwitch {
                 id: numerApprox_TextSwitch
                 text: qsTr("Numerical approximation")

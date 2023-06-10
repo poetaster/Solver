@@ -61,7 +61,7 @@ CoverBackground {
        color: Theme.highlightColor
        font.family: dejavusansmono.name
        font.pixelSize: Theme.fontSizeExtraSmall
-       text: "Derivative"
+       text: cName
     }
 /*
     CoverActionList {
