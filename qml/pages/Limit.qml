@@ -1,3 +1,5 @@
+/* Copyright (C) 2023  Mark Washeim <blueprint@poetaster.de> */
+
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import QtSensors 5.0
@@ -123,7 +125,7 @@ Page {
                 font.family: dejavusansmono.name
                 color: 'lightblue'
                 font.pixelSize: Theme.fontSizeSmallBase
-                text : 'Loading Python and SymPy ...'
+                text : '...'
                 Component.onCompleted: {
                     //_editor.textFormat = Text.RichText;
                 }

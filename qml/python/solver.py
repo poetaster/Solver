@@ -14,6 +14,7 @@ timet1=time.time()
 
 from sympy import *
 from sympy import __version__
+from mpmath import *
 from sympy.interactive.printing import init_printing
 from sympy.printing.mathml import print_mathml
 
