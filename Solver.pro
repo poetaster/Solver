@@ -10,25 +10,27 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = Solver
+TARGET = harbour-solver
 
 CONFIG += sailfishapp_qml
 
-OTHER_FILES += qml/Solver.qml \
+OTHER_FILES += qml/haroub-solver.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/FirstPage.qml \
+    qml/pages/Derivative.qml \
+    qml/pages/Integral.qml \
+    qml/pages/Limit.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/HelpPage.qml \
     qml/pages/derivative.py \
     qml/pages/DejaVuSansMono.ttf \
-    rpm/Solver.spec \
-    rpm/Solver.changes \
-    Solver.desktop \
+    rpm/harbour-solver.spec \
+    rpm/harbour-solver.changes \
+    harbour-solver.desktop \
     translations/*.ts \
-    rpm/Solver.changes \
+    rpm/harbour-solver.changes \
 
-TRANSLATIONS += translations/Solver-de.ts
+TRANSLATIONS += translations/harbour-solver-de.ts
 
 python.path = /usr/share/$${TARGET}/qml
 python.files = python

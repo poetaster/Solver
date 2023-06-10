@@ -66,6 +66,9 @@ Page {
         height: derivative_Column.height
         width: parent.width
 
+        Component.onCompleted: {
+            cName = "Derivative"
+        }
         PullDownMenu {
             MenuItem {
                 text: "About"
