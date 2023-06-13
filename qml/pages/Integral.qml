@@ -2,7 +2,7 @@
   Copyright (C) 2023  Mark Washeim <blueprint@poetaster.de>
 */
 
-import QtQuick 2.0
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 import QtSensors 5.0
 import QtQuick.Layouts 1.1
@@ -372,14 +372,13 @@ Page {
                 }
                 Button {
                     id: copy_Button
-                    width: parent.width*0.42
+                    width: parent.width * 1/3 - Theme.paddingLarge
                     text: qsTr("Copy")
                     onClicked: Clipboard.text = result_TextArea.text
                 }
                 Button {
                     id: calculate_Button
-                    anchors.leftMargin: Theme.paddingLarge
-                    width: parent.width*0.55
+                    width: parent.width * 2/3 - Theme.paddingLarge
                     text: qsTr("Calculate")
                     focus: true
                     onClicked: calculateResultIntegral()

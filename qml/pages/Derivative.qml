@@ -138,7 +138,7 @@ Page {
                 inputMethodHints: Qt.ImhNoAutoUppercase
                 label: qsTr("Expression")
                 placeholderText: "sqrt(x/(x**3+1))"
-                text: "sqrt(x/(y**3+z))"
+                text: "x * sin(x**2) + 1"
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: var1_TextField.focus = true
@@ -190,7 +190,7 @@ Page {
                    validator: IntValidator { bottom: 0; top: 9999 }
                    label: "#"
                    placeholderText: "0"
-                   text: "2"
+                   text: "0"
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
                    EnterKey.onClicked: var3_TextField.focus = true
@@ -213,7 +213,7 @@ Page {
                    validator: IntValidator { bottom: 0; top: 9999 }
                    label: "#"
                    placeholderText: "0"
-                   text: "3"
+                   text: "0"
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                    EnterKey.onClicked: derivative_Column.calculateResultDerivative()
@@ -228,14 +228,14 @@ Page {
                 spacing: Theme.paddingLarge
                 Button {
                     id: copy_Button
-                    width: parent.width*0.42
+                    width: parent.width * 1/3 - Theme.paddingLarge
                     text: qsTr("Copy")
                     onClicked: Clipboard.text = result_TextArea.text
                 }
                 Button {
                     anchors.leftMargin: Theme.paddingLarge
                     id: calculate_Button
-                    width: parent.width*0.55
+                    width: parent.width * 2/3 - Theme.paddingLarge
                     text: qsTr("Calculate")
                     focus: true
                     onClicked: calculateResultDerivative()
@@ -253,7 +253,7 @@ Page {
             }
           }
         }
-        VerticalScrollDecorator { flickable: derivative_Column }
+        VerticalScrollDecorator { flickable: container }
     }
 
 }

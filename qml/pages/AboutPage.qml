@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 
 
@@ -14,9 +14,10 @@ Page {
                 '<style>a:link { color: ' + Theme.primaryColor  + '; }</style>' +
                         'Solver calculates Derivatives, Integrals and Limits<br>derivatives symbolically and numerically<br>' +
                         '<br><br>Solver is written using<br>Python 3, SymPy, PyOtherSide, Qt5,<br>Qt Quick 2 (Silica Components).' +
-                        '<br><br>It is based in large part by work from © 2011-2014 by Roberto Colistete Jr.' +
+                        '<br><br>Based on ideas from Roberto Colistete Jr.' +
+                        '<br><br>individual apps for these 3 functions.' +
                         '<br>Free & Open Source :' +
-                        '<br><a href="http://www.gnu.org/licenses/lgpl-3.0.html"><b>License LGPLv3</b></a>' +
+                        '<br><a href="http://www.gnu.org/licenses/gpl-3.0.html"><b>License GPLv3</b></a>' +
                         '<br><br>Source :' +
                         '<br><a href="https://github.com/poetaster/Solver"><b>Solver</b></a>'
             }

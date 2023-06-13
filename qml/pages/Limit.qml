@@ -52,7 +52,7 @@ Page {
     onOrientationChanged:  {
         if (_pictureRotation === 0 || _pictureRotation === 180) {
             numColumns = 40    // Portrait
-            tAreaH = page.height * 1.2 //1000
+            tAreaH = page.height * 1000
         } else {
             tAreaH = 450
             numColumns= 80
@@ -140,7 +140,8 @@ Page {
             width: parent.width
             height:  parent.height * .45
             spacing: Theme.paddingSmall
-            anchors.top: limit_Column.bottom
+            //anchors.top: limit_Column.bottom
+            anchors.bottom: parent.bottom
 
             Row {
                 width: parent.width
@@ -202,13 +203,13 @@ Page {
                 }
                 Button {
                     id: copy_Button
-                    width: parent.width*0.42
+                    width: parent.width * 1/3 - Theme.paddingLarge
                     text: qsTr("Copy")
                     onClicked: Clipboard.text = result_TextArea.text
                 }
                 Button {
                     id: calculate_Button
-                    width: parent.width*0.55
+                    width: parent.width * 2/3 - Theme.paddingLarge
                     text: qsTr("Calculate")
                     focus: true
                     onClicked: calculateResultLimit()
