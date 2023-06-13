@@ -2,7 +2,7 @@
 Type=Application
 X-Nemo-Application-Type=silica-qt5
 Name=Solver
-Icon=Solver
+Icon=harbour-solver
 Exec=/usr/bin/sailfish-qml harbour-solver
 
 [X-Sailjail]

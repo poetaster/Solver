@@ -29,7 +29,7 @@ ApplicationWindow {
     property string cName: 'Derivative'
     property int derivativeScreenOrientation: Orientation.Portrait | Orientation.Landscape
 
-    initialPage: Component { Derivative { } }
+    initialPage: Component { Limit { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
     Python {

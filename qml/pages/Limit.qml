@@ -14,6 +14,7 @@ Page {
     // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
     property int _orientation: OrientationReading.TopUp
     property int _pictureRotation;
+    property bool debug: true
     function calculateResultLimit() {
         result_TextArea.text = 'Calculating limit...'
         py.call('solver.calculate_Limit', [expression_TextField.text,variable_TextField.text,point_TextField.text,direction_ComboBox.value,orientation!==Orientation.Landscape,showLimit,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
@@ -32,7 +33,7 @@ Page {
             if (reading.orientation >= OrientationReading.TopUp
                     && reading.orientation <= OrientationReading.RightUp) {
                 _orientation = reading.orientation
-                console.log("Orientation:", reading.orientation, _orientation);
+                if (debug) console.log("Orientation:", reading.orientation, _orientation);
             }
             switch (reading.orientation) {
             case OrientationReading.TopUp:
@@ -51,28 +52,30 @@ Page {
     onOrientationChanged:  {
         if (_pictureRotation === 0 || _pictureRotation === 180) {
             numColumns = 40    // Portrait
-            tAreaH = 1000
+            tAreaH = page.height * 1.2 //1000
         } else {
             tAreaH = 450
             numColumns= 80
         }
-        console.debug(_pictureRotation)
-        console.debug(numColumns)
-        calculateResultDerivative()
+        if (debug) console.debug(_pictureRotation)
+        if (debug) console.debug(numColumns)
+        calculateResultLimit()
+    }
+    PageHeader {
+        id: header
+        title: qsTr("Limit")
     }
     SilicaFlickable {
         Component.onCompleted:  {
             cName = "Limit"
         }
-
         id: container
         anchors.fill: parent
-        //height: contentItem.childrenRect.height
+        height: childrenRect.height
         width: page.width
 
         VerticalScrollDecorator { flickable: container }
 
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
                 text: "About"
@@ -88,37 +91,24 @@ Page {
             }
             MenuItem {
                 text: "Derivative"
-                onClicked: pageStack.push(Qt.resolvedUrl("Derivative.qml"))
+                onClicked: pageStack.replace(Qt.resolvedUrl("Derivative.qml"))
             }
             MenuItem {
                 text: "Integral"
-                onClicked: pageStack.push(Qt.resolvedUrl("Integral.qml"))
+                onClicked: pageStack.replace(Qt.resolvedUrl("Integral.qml"))
             }
         }
-        PushUpMenu {
-            MenuItem {
-                text: qsTr("Copy result")
-                onClicked: Clipboard.text = result_TextArea.text
-            }
-            MenuItem {
-                text: qsTr("Copy formula")
-                onClicked: Clipboard.text = expression_TextField.text
-            }
-        }
+        FontLoader { id: dejavusansmono; source: "DejaVuSansMono.ttf" }
 
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
         Column {
             id : limit_Column
-            width: page.width
+            width: parent.width
+            height: parent.height * .54
             spacing: Theme.paddingSmall
-            PageHeader {
-                title: qsTr("Limit")
-            }
-            FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
+            topPadding: Theme.paddingLarge * 5
+
             TextArea {
                 id: result_TextArea
-
                 height: tAreaH
                 width: parent.width
                 readOnly: true
@@ -132,7 +122,8 @@ Page {
 
                 /* for the cover we hold the value */
                 onTextChanged: {
-                    console.log(implicitHeight)
+                    if (debug) console.log(implicitHeight)
+                    if (debug) console.log(parent.height)
                     resultText = scaleText(text)
                 }
                 /* for the cover we scale font px values */
@@ -143,16 +134,38 @@ Page {
                     return txt
                 }
             }
-            TextField {
-                id: expression_TextField
-                inputMethodHints: Qt.ImhNoAutoUppercase
-                placeholderText: "sin(x)/x"
-                label: qsTr("Limit expression")
+        }
+        Column {
+            id : input_Column
+            width: parent.width
+            height:  parent.height * .45
+            spacing: Theme.paddingSmall
+            anchors.top: limit_Column.bottom
+
+            Row {
                 width: parent.width
-                text : "sin(x)/x"
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: variable_TextField.focus = true
+                TextField {
+                    id: expression_TextField
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    placeholderText: "sin(x)/x"
+                    label: qsTr("Limit expression")
+                    width: parent.width * 0.5
+                    text : "sin(x)/x"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: variable_TextField.focus = true
+                }
+                ComboBox {
+                    id: direction_ComboBox
+                    width: page.width*0.5
+                    label: qsTr("Direction")
+                    currentIndex: 0
+                    menu: ContextMenu {
+                        MenuItem { text: "Bilateral" }
+                        MenuItem { text: "Left" }
+                        MenuItem { text: "Right" }
+                    }
+                }
             }
             Row {
                 width: parent.width
@@ -180,85 +193,38 @@ Page {
                 }
             }
             Row {
-                width: parent.width
-                ComboBox {
-                    id: direction_ComboBox
-                    width: page.width*0.55
-                    label: qsTr("Direction ")
-                    currentIndex: 0
-                    menu: ContextMenu {
-                        MenuItem { text: "Bilateral" }
-                        MenuItem { text: "Left" }
-                        MenuItem { text: "Right" }
-                    }
+                spacing: Theme.paddingLarge
+                anchors {
+                    //parent.horizontalCenter
+                    left: parent.left
+                    right: parent.right
+                    leftMargin: Theme.paddingLarge
+                }
+                Button {
+                    id: copy_Button
+                    width: parent.width*0.42
+                    text: qsTr("Copy")
+                    onClicked: Clipboard.text = result_TextArea.text
                 }
                 Button {
                     id: calculate_Button
-                    width: parent.width*0.35
+                    width: parent.width*0.55
                     text: qsTr("Calculate")
                     focus: true
                     onClicked: calculateResultLimit()
                 }
-            }
-            Separator {
-                id : limit_Separator
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width*0.9
-                color: Theme.primaryColor
-            }
 
+            }
             Label {
-               id:timer
-                anchors {
-                    left: limit_Separator.left
-                    topMargin: 2 * Theme.paddingLarge
-                    bottomMargin: 2 * Theme.paddingLarge
-                }
-               width: parent.width  - Theme.paddingLarge
-               text: timerInfo
-               color: Theme.highlightColor
+                id:timer
+                visible: _pictureRotation === 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width*0.50
+                //width: parent.width  - Theme.paddingLarge
+                text: timerInfo
+                color: Theme.highlightColor
             }
 
-
-/*
-            Python {
-                id: py
-
-                Component.onCompleted: {
-                    // Add the Python library directory to the import path
-                    var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
-                    addImportPath(pythonpath);
-                    console.log(pythonpath);
-
-                    setHandler('timerPush', timerPushHandler);
-
-                    // Asynchronous module importing
-                    importModule('limit', function() {
-                        //console.log('Python version: ' + evaluate('limit.versionPython'));
-                        //console.log('SymPy version ' + evaluate('limit.versionSymPy') + evaluate('(" loaded in %f seconds.\n" % limit.loadingtimeSymPy)'));
-                        result_TextArea.text='Python version ' + evaluate('limit.versionPython') + '.\n'
-                        result_TextArea.text+='SymPy version ' + evaluate('limit.versionSymPy') + '\n'
-                        timerInfo = evaluate('("loaded in %f seconds." % limit.loadingtimeSymPy)')
-                    });
-                }
-
-                // shared via timerInfo with cover
-                function timerPushHandler(pTimer) {
-                    timerInfo = "Calculated in: " + pTimer
-                }
-
-                onError: {
-                    // when an exception is raised, this error handler will be called
-                    console.log('python error: ' + traceback);
-                }
-
-                onReceived: {
-                    // asychronous messages from Python arrive here
-                    // in Python, this can be accomplished via pyotherside.send()
-                    console.log('got message from python: ' + data);
-                }
-            }
-            */
         }
     }
 }

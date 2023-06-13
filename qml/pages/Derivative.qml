@@ -2,11 +2,9 @@
   Copyright (C) 2023 Mark Washeim <blueprint@poetaster.de>.
 */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import Sailfish.Silica 1.0
 import QtSensors 5.0
-import QtQuick.Layouts 1.1
-
 import io.thp.pyotherside 1.5
 
 Page {
@@ -49,21 +47,22 @@ Page {
     onOrientationChanged:  {
         if (_pictureRotation === 0 || _pictureRotation === 180) {
             numColumns = 40    // Portrait
-            tAreaH = 1000
+            tAreaH =  derivativePage.height
         } else {
             tAreaH = 450
-            numColumns= 80
+            numColumns= 100
         }
         console.debug(_pictureRotation)
         console.debug(numColumns)
         calculateResultDerivative()
     }
-    // To enable PullDownMenu, place our content in a SilicaFlickable
+    PageHeader {
+        title: qsTr("Derivative")
+    }
     SilicaFlickable {
         id: container
         anchors.fill: parent
-        //contentHeight: contentItem.childrenRect.height
-        height: derivative_Column.height
+        height: childrenRect.height
         width: parent.width
 
         Component.onCompleted: {
@@ -84,44 +83,27 @@ Page {
             }
             MenuItem {
                 text: "Integral"
-                onClicked: pageStack.push(Qt.resolvedUrl("Integral.qml"))
+                onClicked: pageStack.replace(Qt.resolvedUrl("Integral.qml"))
             }
             MenuItem {
                 text: "Limit"
-                onClicked: pageStack.push(Qt.resolvedUrl("Limit.qml"))
+                onClicked: pageStack.replace(Qt.resolvedUrl("Limit.qml"))
             }
         }
-        PushUpMenu {
-            MenuItem {
-                text: qsTr("Copy result")
-                onClicked: Clipboard.text = result_TextArea.text
-            }
-            MenuItem {
-                text: qsTr("Copy formula")
-                onClicked: Clipboard.text = expression_TextField.text
-            }
-        }
+
+        FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
 
         Column {
             id : derivative_Column
-            width: derivativePage.width
-            height: childrenRect.height
+            width: parent.width
+            height: parent.height * 0.65 // childrenRect.height
             spacing: Theme.paddingSmall
+            topPadding: Theme.paddingLarge * 3
 
-
-            PageHeader {
-                title: qsTr("Derivative")
-            }
-
-            FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
             TextArea {
                 id: result_TextArea
                 height: tAreaH
                 width: parent.width
-                anchors {
-                }
-
-                //height: 3000
                 readOnly: true
                 font.family: dejavusansmono.name
                 font.pixelSize: Theme.fontSizeExtraSmall
@@ -143,13 +125,20 @@ Page {
                 }
             }
 // Try top
+          Column {
+            id : input_Column
+            width: parent.width
+            height:  parent.height * .30
+            spacing: Theme.paddingSmall
+            //anchors.bottom: parent.bottom
+            //anchors.bottomMargin: Theme.paddingLarge
             TextField {
                 id: expression_TextField
                 width: parent.width
                 inputMethodHints: Qt.ImhNoAutoUppercase
                 label: qsTr("Expression")
                 placeholderText: "sqrt(x/(x**3+1))"
-                text: "sqrt(x/(x**3+1))"
+                text: "sqrt(x/(y**3+z))"
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: var1_TextField.focus = true
@@ -201,7 +190,7 @@ Page {
                    validator: IntValidator { bottom: 0; top: 9999 }
                    label: "#"
                    placeholderText: "0"
-                   text: "0"
+                   text: "2"
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
                    EnterKey.onClicked: var3_TextField.focus = true
@@ -224,34 +213,45 @@ Page {
                    validator: IntValidator { bottom: 0; top: 9999 }
                    label: "#"
                    placeholderText: "0"
-                   text: "0"
+                   text: "3"
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                    EnterKey.onClicked: derivative_Column.calculateResultDerivative()
                 }
             }
-            Button {
-                id: calculate_Button
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width*0.60
-                text: qsTr("Calculate")
-                focus: true
-                onClicked: calculateResultDerivative()
-            }
-            Separator {
-                id : derivative_Separator
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width*0.9
-                color: Theme.primaryColor
+            Row {
+                anchors.leftMargin: Theme.paddingLarge
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Theme.paddingLarge
+                Button {
+                    id: copy_Button
+                    width: parent.width*0.42
+                    text: qsTr("Copy")
+                    onClicked: Clipboard.text = result_TextArea.text
+                }
+                Button {
+                    anchors.leftMargin: Theme.paddingLarge
+                    id: calculate_Button
+                    width: parent.width*0.55
+                    text: qsTr("Calculate")
+                    focus: true
+                    onClicked: calculateResultDerivative()
+                }
+
             }
 
             Label {
                id:timer
+               visible: _pictureRotation === 0
                anchors.horizontalCenter: parent.horizontalCenter
                width: parent.width*0.50
                text: timerInfo
                color: Theme.highlightColor
             }
+          }
         }
         VerticalScrollDecorator { flickable: derivative_Column }
     }

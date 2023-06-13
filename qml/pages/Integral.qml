@@ -1,4 +1,4 @@
-/*
+﻿/*
   Copyright (C) 2023  Mark Washeim <blueprint@poetaster.de>
 */
 
@@ -23,6 +23,7 @@ Page {
     // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
     property int _orientation: OrientationReading.TopUp
     property int _pictureRotation;
+    property bool debug: true
 
     OrientationSensor {
         id: orientationSensor
@@ -31,7 +32,7 @@ Page {
             if (reading.orientation >= OrientationReading.TopUp
                     && reading.orientation <= OrientationReading.RightUp) {
                 _orientation = reading.orientation
-                console.log("Orientation:", reading.orientation, _orientation);
+                if (debug) console.log("Orientation:", reading.orientation, _orientation);
             }
             switch (reading.orientation) {
             case OrientationReading.TopUp:
@@ -53,17 +54,21 @@ Page {
             tAreaH = 1000
         } else {
             tAreaH = 450
-            numColumns= 80
+            numColumns= 100
         }
-        console.debug(_pictureRotation)
-        console.debug(numColumns)
+        if (debug) console.debug(_pictureRotation)
+        if (debug) console.debug(numColumns)
         calculateResultIntegral()
+    }
+    PageHeader {
+          title: qsTr("Integral")
     }
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         id: container
         anchors.fill: parent
-        height: integral_Column.height  //Theme.paddingLarge
+        //height: integral_Column.height  //Theme.paddingLarge
+        height: childrenRect.height
         width: page.width
 
         Component.onCompleted: {
@@ -87,42 +92,25 @@ Page {
             }
             MenuItem {
                 text: "Derivative"
-                onClicked: pageStack.push(Qt.resolvedUrl("Derivative.qml"))
+                onClicked: pageStack.replace(Qt.resolvedUrl("Derivative.qml"))
             }
             MenuItem {
                 text: "Limit"
-                onClicked: pageStack.push(Qt.resolvedUrl("Limit.qml"))
+                onClicked: pageStack.replace(Qt.resolvedUrl("Limit.qml"))
             }
         }
-        PushUpMenu {
-            MenuItem {
-                text: qsTr("Copy result")
-                onClicked: Clipboard.text = result_TextArea.text
-            }
-            MenuItem {
-                text: qsTr("Copy formula")
-                onClicked: Clipboard.text = expression_TextField.text
-            }
+        FontLoader {
+            id: dejavusansmono
+            source: "DejaVuSansMono.ttf"
         }
-
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
         Column {
-            id : integral_Column
+            id: textCol
             width: page.width
-            height:  childrenRect.height
+            height:  parent.height * .55
             spacing: Theme.paddingSmall
-
-            PageHeader {
-                title: qsTr("Integral")
-            }
-                FontLoader {
-                    id: dejavusansmono
-                    source: "DejaVuSansMono.ttf"
-                }
-                TextArea {
+            TextArea {
                     id: result_TextArea
-                    height: tAreaH
+                    height: parent.height //tAreaH
                     width: parent.width
                     readOnly: true
                     font.family: dejavusansmono.name
@@ -132,12 +120,16 @@ Page {
                     text : 'Loading Python and SymPy ...'
                     Component.onCompleted: {
                         // _editor.textFormat = Text.RichText;
+                        //if (debug) console.log(implicitHeight)
+                        //height = implicitHeight
                     }
 
                     /* for the cover we hold the value */
                     onTextChanged: {
-                        console.log(implicitHeight)
+                        if (debug) console.log(implicitHeight)
+                        if (debug) console.log(implicitWidth)
                         resultText = scaleText(text)
+                        //height = implicitHeight
                     }
                     /* for the cover we scale font px values */
                     /* on the cover we can use html */
@@ -147,10 +139,17 @@ Page {
                         return txt
                     }
                 }
-            Item {
-                anchors.top: result_TextArea.bottom
+        }
+
+        Column {
+            id : integral_Column
+            anchors {
+                top: textCol.bottom
             }
 
+            width: page.width
+            height:  parent.height * .45
+            spacing: Theme.paddingSmall
             Row {
                 ComboBox {
                     id: integralType_ComboBox
@@ -363,16 +362,34 @@ Page {
                    EnterKey.onClicked: calculate_Button.focus = true
                 }
             }
-            Button {
-                id: calculate_Button
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width*0.60
-                text: qsTr("Calculate")
-                focus: true
-                onClicked: calculateResultIntegral()
+            Row {
+                id: buttonRow
+                spacing: Theme.paddingLarge
+                anchors.leftMargin: Theme.paddingLarge
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                Button {
+                    id: copy_Button
+                    width: parent.width*0.42
+                    text: qsTr("Copy")
+                    onClicked: Clipboard.text = result_TextArea.text
+                }
+                Button {
+                    id: calculate_Button
+                    anchors.leftMargin: Theme.paddingLarge
+                    width: parent.width*0.55
+                    text: qsTr("Calculate")
+                    focus: true
+                    onClicked: calculateResultIntegral()
+                }
+
             }
+
             Label {
                id:timer
+               visible: _pictureRotation === 0
                anchors.horizontalCenter: parent.horizontalCenter
                width: parent.width*0.50
                //width: parent.width  - Theme.paddingLarge
@@ -382,7 +399,7 @@ Page {
 
         }
     }
-
+/*
     states: [
         State {
             name: "inLandscape"
@@ -449,4 +466,5 @@ Page {
             }
         }
     ]
+*/
 }
