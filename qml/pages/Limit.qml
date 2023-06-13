@@ -14,7 +14,7 @@ Page {
     // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
     property int _orientation: OrientationReading.TopUp
     property int _pictureRotation;
-    property bool debug: true
+    property bool debug: false
     function calculateResultLimit() {
         result_TextArea.text = 'Calculating limit...'
         py.call('solver.calculate_Limit', [expression_TextField.text,variable_TextField.text,point_TextField.text,direction_ComboBox.value,orientation!==Orientation.Landscape,showLimit,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {

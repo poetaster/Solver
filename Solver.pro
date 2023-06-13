@@ -30,14 +30,14 @@ OTHER_FILES += qml/haroub-solver.qml \
     translations/*.ts \
     rpm/harbour-solver.changes \
 
-CONFIG += sailfishapp_i18n
-TRANSLATIONS += translations/harbour-solver-de.ts
+#CONFIG += sailfishapp_i18n
+#TRANSLATIONS += translations/harbour-solver-de.ts
 
 python.path = /usr/share/$${TARGET}/qml
 python.files = python
 
-#libs.path = /usr/share/$${TARGET}
-#libs.files = lib
+libs.path = /usr/share/$${TARGET}
+libs.files = lib
 
 INSTALLS += python
 INSTALLS += libs

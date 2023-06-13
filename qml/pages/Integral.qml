@@ -23,7 +23,7 @@ Page {
     // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
     property int _orientation: OrientationReading.TopUp
     property int _pictureRotation;
-    property bool debug: true
+    property bool debug: false
 
     OrientationSensor {
         id: orientationSensor

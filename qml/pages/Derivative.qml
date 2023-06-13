@@ -28,7 +28,7 @@ Page {
             if (reading.orientation >= OrientationReading.TopUp
                     && reading.orientation <= OrientationReading.RightUp) {
                 _orientation = reading.orientation
-                console.log("Orientation:", reading.orientation, _orientation);
+                //console.log("Orientation:", reading.orientation, _orientation);
             }
             switch (reading.orientation) {
             case OrientationReading.TopUp:
@@ -52,8 +52,8 @@ Page {
             tAreaH = 450
             numColumns= 100
         }
-        console.debug(_pictureRotation)
-        console.debug(numColumns)
+        //console.debug(_pictureRotation)
+        //console.debug(numColumns)
         calculateResultDerivative()
     }
     PageHeader {
