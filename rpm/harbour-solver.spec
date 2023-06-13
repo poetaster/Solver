@@ -21,8 +21,6 @@ Group:      Qt/Qt
 License:    LGPLv3
 URL:        http://github.com/poetaster/Solver
 Source0:    %{name}-%{version}.tar.bz2
-BuildArch:  noarch
-Requires:   libsailfishapp-launcher
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.2
 
