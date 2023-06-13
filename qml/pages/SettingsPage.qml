@@ -176,11 +176,6 @@ Page {
                 description: qsTr("before derivative result")
             }
             PropertyChanges {
-                target: showTime_TextSwitch
-                text: qsTr("Show calculation time")
-                description: qsTr("before derivative result")
-            }
-            PropertyChanges {
                 target: numerApprox_TextSwitch
                 text: qsTr("Numerical approximation")
                 description: qsTr("of the derivative result")
