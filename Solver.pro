@@ -40,6 +40,6 @@ python.files = python
 #libs.files = lib
 
 INSTALLS += python
-INSTALLS += libs
+#INSTALLS += libs
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172

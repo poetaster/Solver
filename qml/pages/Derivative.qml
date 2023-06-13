@@ -4,7 +4,6 @@
 
 import QtQuick 2.6
 import Sailfish.Silica 1.0
-import QtSensors 5.0
 import io.thp.pyotherside 1.5
 
 Page {
@@ -17,42 +16,19 @@ Page {
             result_TextArea.text = result;
         })
     }
-    // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
-    property int _orientation: OrientationReading.TopUp
-    property int _pictureRotation;
+    property bool debug: false
 
-    OrientationSensor {
-        id: orientationSensor
-        active: true
-        onReadingChanged: {
-            if (reading.orientation >= OrientationReading.TopUp
-                    && reading.orientation <= OrientationReading.RightUp) {
-                _orientation = reading.orientation
-                //console.log("Orientation:", reading.orientation, _orientation);
-            }
-            switch (reading.orientation) {
-            case OrientationReading.TopUp:
-                _pictureRotation = 0; break
-            case OrientationReading.TopDown:
-                _pictureRotation = 180; break
-            case OrientationReading.LeftUp:
-                _pictureRotation = 270; break
-            case OrientationReading.RightUp:
-                _pictureRotation = 90; break
-            default:
-                // Keep device orientation at previous state
-            }
-        }
-    }
     onOrientationChanged:  {
-        if (_pictureRotation === 0 || _pictureRotation === 180) {
+        if ( orientation === Orientation.Portrait ) {
+            if (debug) console.debug("port")
+            tAreaH =  1000
             numColumns = 40    // Portrait
-            tAreaH =  derivativePage.height
         } else {
+            if (debug) console.debug("land")
             tAreaH = 450
             numColumns= 100
         }
-        //console.debug(_pictureRotation)
+        if (debug) console.debug(Orientation.Portrait)//_pictureRotation)
         //console.debug(numColumns)
         calculateResultDerivative()
     }
@@ -96,7 +72,7 @@ Page {
         Column {
             id : derivative_Column
             width: parent.width
-            height: parent.height * 0.65 // childrenRect.height
+            height: parent.height * 0.65 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
             topPadding: Theme.paddingLarge * 3
 
@@ -128,9 +104,9 @@ Page {
           Column {
             id : input_Column
             width: parent.width
-            height:  parent.height * .30
+            height:  parent.height * .35
             spacing: Theme.paddingSmall
-            //anchors.bottom: parent.bottom
+            //anchors.top: derivative_Column.bottom
             //anchors.bottomMargin: Theme.paddingLarge
             TextField {
                 id: expression_TextField
@@ -245,7 +221,7 @@ Page {
 
             Label {
                id:timer
-               visible: _pictureRotation === 0
+               visible: orientation == Orientation.Portrait ? 1 : 0
                anchors.horizontalCenter: parent.horizontalCenter
                width: parent.width*0.50
                text: timerInfo

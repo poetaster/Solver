@@ -8,7 +8,7 @@ import threading
 from enum import Enum, IntEnum, unique
 
 (major, minor, micro, release, serial) = sys.version_info
-#sys.path.append("/usr/share/Solver/lib/python" + str(major) + "." + str(minor) + "/site-packages/");
+sys.path.append("/usr/share/Solver/lib/python" + str(major) + "." + str(minor) + "/site-packages/");
 
 timet1=time.time()
 

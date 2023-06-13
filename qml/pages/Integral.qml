@@ -4,8 +4,6 @@
 
 import QtQuick 2.6
 import Sailfish.Silica 1.0
-import QtSensors 5.0
-import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.2
 
 Page {
@@ -20,43 +18,16 @@ Page {
         })
     }
     allowedOrientations: derivativeScreenOrientation
-    // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
-    property int _orientation: OrientationReading.TopUp
-    property int _pictureRotation;
     property bool debug: false
 
-    OrientationSensor {
-        id: orientationSensor
-        active: true
-        onReadingChanged: {
-            if (reading.orientation >= OrientationReading.TopUp
-                    && reading.orientation <= OrientationReading.RightUp) {
-                _orientation = reading.orientation
-                if (debug) console.log("Orientation:", reading.orientation, _orientation);
-            }
-            switch (reading.orientation) {
-            case OrientationReading.TopUp:
-                _pictureRotation = 0; break
-            case OrientationReading.TopDown:
-                _pictureRotation = 180; break
-            case OrientationReading.LeftUp:
-                _pictureRotation = 270; break
-            case OrientationReading.RightUp:
-                _pictureRotation = 90; break
-            default:
-                // Keep device orientation at previous state
-            }
-        }
-    }
     onOrientationChanged:  {
-        if (_pictureRotation === 0 || _pictureRotation === 180) {
+        if ( orientation === Orientation.Portrait ) {
             numColumns = 40    // Portrait
             tAreaH = 1000
         } else {
             tAreaH = 450
             numColumns= 100
         }
-        if (debug) console.debug(_pictureRotation)
         if (debug) console.debug(numColumns)
         calculateResultIntegral()
     }
@@ -106,7 +77,7 @@ Page {
         Column {
             id: textCol
             width: page.width
-            height:  parent.height * .55
+            height:  parent.height * .59 - Theme.paddingLarge
             spacing: Theme.paddingSmall
             TextArea {
                     id: result_TextArea
@@ -148,7 +119,7 @@ Page {
             }
 
             width: page.width
-            height:  parent.height * .45
+            height:  parent.height * .35
             spacing: Theme.paddingSmall
             Row {
                 ComboBox {
@@ -388,7 +359,7 @@ Page {
 
             Label {
                id:timer
-               visible: _pictureRotation === 0
+               visible: orientation == Orientation.Portrait ? 1 : 0
                anchors.horizontalCenter: parent.horizontalCenter
                width: parent.width*0.50
                //width: parent.width  - Theme.paddingLarge

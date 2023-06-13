@@ -2,18 +2,12 @@
 
 import QtQuick 2.6
 import Sailfish.Silica 1.0
-import QtSensors 5.0
-import QtQuick.Layouts 1.1
 import io.thp.pyotherside 1.2
 
 Page {
     id: page
 
     allowedOrientations: derivativeScreenOrientation
-    // To enable PullDownMenu, place our content in a SilicaFlickable
-    // 0=unknown, 1=portrait, 2=portrait inverted, 3=landscape, 4=landscape inverted
-    property int _orientation: OrientationReading.TopUp
-    property int _pictureRotation;
     property bool debug: false
     function calculateResultLimit() {
         result_TextArea.text = 'Calculating limit...'
@@ -26,38 +20,14 @@ Page {
         result_TextArea.copy()
         result_TextArea.deselect()
     }
-    OrientationSensor {
-        id: orientationSensor
-        active: true
-        onReadingChanged: {
-            if (reading.orientation >= OrientationReading.TopUp
-                    && reading.orientation <= OrientationReading.RightUp) {
-                _orientation = reading.orientation
-                if (debug) console.log("Orientation:", reading.orientation, _orientation);
-            }
-            switch (reading.orientation) {
-            case OrientationReading.TopUp:
-                _pictureRotation = 0; break
-            case OrientationReading.TopDown:
-                _pictureRotation = 180; break
-            case OrientationReading.LeftUp:
-                _pictureRotation = 270; break
-            case OrientationReading.RightUp:
-                _pictureRotation = 90; break
-            default:
-                // Keep device orientation at previous state
-            }
-        }
-    }
     onOrientationChanged:  {
-        if (_pictureRotation === 0 || _pictureRotation === 180) {
+        if ( orientation === Orientation.Portrait ) {
             numColumns = 40    // Portrait
             tAreaH = page.height * 1000
         } else {
             tAreaH = 450
             numColumns= 80
         }
-        if (debug) console.debug(_pictureRotation)
         if (debug) console.debug(numColumns)
         calculateResultLimit()
     }
@@ -103,7 +73,7 @@ Page {
         Column {
             id : limit_Column
             width: parent.width
-            height: parent.height * .54
+            height: parent.height * .59 - Theme.paddingLarge
             spacing: Theme.paddingSmall
             topPadding: Theme.paddingLarge * 5
 
@@ -138,10 +108,9 @@ Page {
         Column {
             id : input_Column
             width: parent.width
-            height:  parent.height * .45
+            height:  parent.height * .40 - Theme.paddingLarge
             spacing: Theme.paddingSmall
-            //anchors.top: limit_Column.bottom
-            anchors.bottom: parent.bottom
+            anchors.top: limit_Column.bottom
 
             Row {
                 width: parent.width
@@ -187,10 +156,10 @@ Page {
                     width: parent.width*0.5
                     placeholderText: "0"
                     label: qsTr("Point")
-                    text : "0"
+                    text : "5"
                     EnterKey.enabled: text.length > 0
                     EnterKey.iconSource: "image://theme/icon-m-enter-accept"
-                    EnterKey.onClicked: limit_Column.calculateResultLimit()
+                    EnterKey.onClicked: calculateResultLimit()
                 }
             }
             Row {
@@ -218,8 +187,8 @@ Page {
             }
             Label {
                 id:timer
-                visible: _pictureRotation === 0
                 anchors.horizontalCenter: parent.horizontalCenter
+                visible: orientation == Orientation.Portrait ? 1 : 0
                 width: parent.width*0.50
                 //width: parent.width  - Theme.paddingLarge
                 text: timerInfo
