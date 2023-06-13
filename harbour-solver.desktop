@@ -6,6 +6,6 @@ Icon=harbour-solver
 Exec=sailfish-qml harbour-solver
 
 [X-Sailjail]
-Permissions=Camera;UserDirs
+Permissions=UserDirs
 OrganizationName=de.poetaster
 ApplicationName=Solver
