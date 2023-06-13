@@ -36,8 +36,8 @@ OTHER_FILES += qml/haroub-solver.qml \
 python.path = /usr/share/$${TARGET}/qml
 python.files = python
 
-libs.path = /usr/share/$${TARGET}
-libs.files = lib
+#libs.path = /usr/share/$${TARGET}
+#libs.files = lib
 
 INSTALLS += python
 INSTALLS += libs
