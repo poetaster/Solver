@@ -22,10 +22,12 @@ Page {
 
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
+            if (debug) console.debug("port")
+            tAreaH = _screenHeight * 3/5 //derivative_Column.childrenRect.height * .6
             numColumns = 40    // Portrait
-            tAreaH = 1000
         } else {
-            tAreaH = 450
+            if (debug) console.debug("land")
+            tAreaH = _screenHeight * 1/5
             numColumns= 100
         }
         if (debug) console.debug(numColumns)
@@ -80,9 +82,10 @@ Page {
         }
         Column {
             id: textCol
-            width: page.width
-            height:  parent.height * .59 - Theme.paddingLarge
+            width: parent.width
+            height: parent.height * 3/5 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
+            topPadding: Theme.paddingLarge * 3
             TextArea {
                     id: result_TextArea
                     height: parent.height //tAreaH
@@ -118,13 +121,9 @@ Page {
 
         Column {
             id : integral_Column
-            anchors {
-                top: textCol.bottom
-            }
-
             width: page.width
-            height:  parent.height * .35
             spacing: Theme.paddingSmall
+            anchors.bottom: parent.bottom
             Row {
                 ComboBox {
                     id: integralType_ComboBox

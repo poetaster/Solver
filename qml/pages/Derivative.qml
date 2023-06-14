@@ -7,7 +7,7 @@ import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.5
 
 Page {
-    id: derivativePage
+    id: page
 
     allowedOrientations: derivativeScreenOrientation
     function calculateResultDerivative() {
@@ -16,16 +16,15 @@ Page {
             result_TextArea.text = result;
         })
     }
-    property bool debug: false
-
+    property bool debug: true
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
             if (debug) console.debug("port")
-            tAreaH =  1000
+            tAreaH = _screenHeight * 3/5 //derivative_Column.childrenRect.height * .6
             numColumns = 40    // Portrait
         } else {
             if (debug) console.debug("land")
-            tAreaH = 450
+            tAreaH = _screenHeight * 1/5
             numColumns= 100
         }
         if (debug) console.debug(Orientation.Portrait)//_pictureRotation)
@@ -71,15 +70,15 @@ Page {
             }
         }
 
+        VerticalScrollDecorator { flickable: container }
         FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
 
         Column {
             id : derivative_Column
             width: parent.width
-            height: parent.height * 0.65 - Theme.paddingLarge // childrenRect.height
+            height: parent.height * 3/5 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
             topPadding: Theme.paddingLarge * 3
-
             TextArea {
                 id: result_TextArea
                 height: tAreaH
@@ -89,8 +88,11 @@ Page {
                 font.pixelSize: Theme.fontSizeExtraSmall
                 text : 'Loading Python and SymPy, it takes some seconds...'
                 color: 'lightblue'
+                clip: true
                 Component.onCompleted: {
                     //_editor.textFormat = Text.RichText;
+                    if(debug) console.debug(implicitHeight)
+                    if(debug) console.debug(height)
                 }
                 /* for the cover we hold the value */
                 onTextChanged: {
@@ -104,14 +106,12 @@ Page {
                     return txt
                 }
             }
-// Try top
-          Column {
-            id : input_Column
+        }
+        Column {
+            id: textInput
             width: parent.width
-            height:  parent.height * .35
             spacing: Theme.paddingSmall
-            //anchors.top: derivative_Column.bottom
-            //anchors.bottomMargin: Theme.paddingLarge
+            anchors.bottom: parent.bottom
             TextField {
                 id: expression_TextField
                 width: parent.width
@@ -130,73 +130,73 @@ Page {
                 rows: 1
                 columns: 6
                 TextField {
-                   id: var1_TextField
-                   width: parent.width*0.20
-                   inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Var.1")
-                   placeholderText: "x"
-                   text: "x"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: numVar1_TextField.focus = true
+                    id: var1_TextField
+                    width: parent.width*0.20
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Var.1")
+                    placeholderText: "x"
+                    text: "x"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: numVar1_TextField.focus = true
                 }
                 TextField {
-                   id: numVar1_TextField
-                   width: parent.width*0.13
-                   inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                   validator: IntValidator { bottom: 0; top: 9999 }
-                   label: "#"
-                   placeholderText: "1"
-                   text: "1"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: var2_TextField.focus = true
+                    id: numVar1_TextField
+                    width: parent.width*0.13
+                    inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
+                    validator: IntValidator { bottom: 0; top: 9999 }
+                    label: "#"
+                    placeholderText: "1"
+                    text: "1"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: var2_TextField.focus = true
                 }
                 TextField {
-                   id: var2_TextField
-                   width: parent.width*0.20
-                   inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Var.2")
-                   placeholderText: "y"
-                   text: "y"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: numVar2_TextField.focus = true
+                    id: var2_TextField
+                    width: parent.width*0.20
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Var.2")
+                    placeholderText: "y"
+                    text: "y"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: numVar2_TextField.focus = true
                 }
                 TextField {
-                   id: numVar2_TextField
-                   width: parent.width*0.13
-                   inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                   validator: IntValidator { bottom: 0; top: 9999 }
-                   label: "#"
-                   placeholderText: "0"
-                   text: "0"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: var3_TextField.focus = true
+                    id: numVar2_TextField
+                    width: parent.width*0.13
+                    inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
+                    validator: IntValidator { bottom: 0; top: 9999 }
+                    label: "#"
+                    placeholderText: "0"
+                    text: "0"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: var3_TextField.focus = true
                 }
                 TextField {
-                   id: var3_TextField
-                   width: parent.width*0.20
-                   inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Var.3")
-                   placeholderText: "z"
-                   text: "z"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: numVar3_TextField.focus = true
+                    id: var3_TextField
+                    width: parent.width*0.20
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Var.3")
+                    placeholderText: "z"
+                    text: "z"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: numVar3_TextField.focus = true
                 }
                 TextField {
-                   id: numVar3_TextField
-                   width: parent.width*0.13
-                   inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                   validator: IntValidator { bottom: 0; top: 9999 }
-                   label: "#"
-                   placeholderText: "0"
-                   text: "0"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-accept"
-                   EnterKey.onClicked: derivative_Column.calculateResultDerivative()
+                    id: numVar3_TextField
+                    width: parent.width*0.13
+                    inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
+                    validator: IntValidator { bottom: 0; top: 9999 }
+                    label: "#"
+                    placeholderText: "0"
+                    text: "0"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-accept"
+                    EnterKey.onClicked: derivative_Column.calculateResultDerivative()
                 }
             }
             Row {
@@ -224,16 +224,15 @@ Page {
             }
 
             Label {
-               id:timer
-               visible: orientation == Orientation.Portrait ? 1 : 0
-               anchors.horizontalCenter: parent.horizontalCenter
-               width: parent.width*0.50
-               text: timerInfo
-               color: Theme.highlightColor
+                id:timer
+                visible: orientation == Orientation.Portrait ? 1 : 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                //anchors.bottom: parent.bottom
+                width: parent.width*0.50
+                text: timerInfo
+                color: Theme.highlightColor
             }
-          }
         }
-        VerticalScrollDecorator { flickable: container }
     }
 
 }

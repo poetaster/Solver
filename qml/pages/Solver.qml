@@ -7,7 +7,7 @@ import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.5
 
 Page {
-    id: derivativePage
+    id: page
 
     allowedOrientations: derivativeScreenOrientation
     property bool debug: true
@@ -23,11 +23,11 @@ Page {
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
             if (debug) console.debug("port")
-            tAreaH =  800
+            tAreaH = _screenHeight * 3/5 //derivative_Column.childrenRect.height * .6
             numColumns = 40    // Portrait
         } else {
             if (debug) console.debug("land")
-            tAreaH = 450
+            tAreaH = _screenHeight * 1/5
             numColumns= 100
         }
         if (debug) console.debug(Orientation.Portrait)
@@ -45,6 +45,9 @@ Page {
 
         Component.onCompleted: {
             cName = "Solver"
+            if(debug) console.debug(childrenRect.height)
+            if(debug) console.debug(solver_Column.childrenRect.height)
+            if(debug) console.debug(input_Column.childrenRect.height)
         }
         PullDownMenu {
             MenuItem {
@@ -60,6 +63,10 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
+                text: "Derivative"
+                onClicked: pageStack.replace(Qt.resolvedUrl("Derivative.qml"))
+            }
+            MenuItem {
                 text: "Integral"
                 onClicked: pageStack.replace(Qt.resolvedUrl("Integral.qml"))
             }
@@ -72,12 +79,11 @@ Page {
         FontLoader { id: dejavusansmono; source: "file:DejaVuSansMono.ttf" }
 
         Column {
-            id : derivative_Column
+            id : solver_Column
             width: parent.width
-            height: parent.height * 0.45 - Theme.paddingLarge // childrenRect.height
+            height: parent.height * 3/5 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
             topPadding: Theme.paddingLarge * 3
-
             TextArea {
                 id: result_TextArea
                 height: tAreaH
@@ -102,44 +108,42 @@ Page {
                     return txt
                 }
             }
-// Try top
-          Column {
+        }
+        Column {
             id : input_Column
-            width: parent.width
-            height:  parent.height * .55 - Theme.paddingLarge
+            width: page.width
             spacing: Theme.paddingSmall
-            //anchors.top: derivative_Column.bottom
-            //anchors.bottomMargin: Theme.paddingLarge
+            anchors.bottom: parent.bottom
             Row{
-            //anchors.leftMargin: Theme.paddingLarge
-            anchors {
-                left: parent.left
-                right: parent.right
+                //anchors.leftMargin: Theme.paddingLarge
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                spacing: Theme.paddingLarge
+                TextField {
+                    id: expressionLeft
+                    width: parent.width / 2 - Theme.paddingLarge
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Exp. Left")
+                    placeholderText: "6/(5-sqrt(x))"
+                    text: "a*x**2 + b*x + c"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: expressionRight.focus = true
+                }
+                TextField {
+                    id: expressionRight
+                    width: parent.width  / 2 - Theme.paddingLarge
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Exp. Right")
+                    placeholderText: "sqrt(x)"
+                    text: "0"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: var1_TextField.focus = true
+                }
             }
-            spacing: Theme.paddingLarge
-            TextField {
-                id: expressionLeft
-                width: parent.width / 2 - Theme.paddingLarge
-                inputMethodHints: Qt.ImhNoAutoUppercase
-                label: qsTr("Exp. Left")
-                placeholderText: "6/(5-sqrt(x))"
-                text: "6/(5-sqrt(x))"
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: expressionRight.focus = true
-            }
-            TextField {
-                id: expressionRight
-                width: parent.width  / 2 - Theme.paddingLarge
-                inputMethodHints: Qt.ImhNoAutoUppercase
-                label: qsTr("Exp. Right")
-                placeholderText: "sqrt(x)"
-                text: "sqrt(x)"
-                EnterKey.enabled: text.length > 0
-                EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                EnterKey.onClicked: var1_TextField.focus = true
-            }
-          }
             Grid {
                 id: diffs_Item
                 anchors {left: parent.left; right: parent.right}
@@ -147,37 +151,37 @@ Page {
                 rows: 1
                 columns: 3
                 TextField {
-                   id: var1_TextField
-                   width: parent.width*0.20
-                   inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Solve for:")
-                   placeholderText: "x"
-                   text: "x"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: var2_TextField.focus = true
+                    id: var1_TextField
+                    width: parent.width*0.20
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Solve for:")
+                    placeholderText: "x"
+                    text: "x"
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: var2_TextField.focus = true
                 }
                 TextField {
-                   id: var2_TextField
-                   width: parent.width*0.20
-                   inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Var.2")
-                   placeholderText: "y"
-                   text: ""
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: var3_TextField.focus = true
+                    id: var2_TextField
+                    width: parent.width*0.20
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Var.2")
+                    placeholderText: "y"
+                    text: ""
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: var3_TextField.focus = true
                 }
                 TextField {
-                   id: var3_TextField
-                   width: parent.width*0.20
-                   inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Var.3")
-                   placeholderText: "z"
-                   text: ""
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: calculate_Button.focus = true
+                    id: var3_TextField
+                    width: parent.width*0.20
+                    inputMethodHints: Qt.ImhNoAutoUppercase
+                    label: qsTr("Var.3")
+                    placeholderText: "z"
+                    text: ""
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                    EnterKey.onClicked: calculate_Button.focus = true
                 }
             }
             Row {
@@ -205,16 +209,14 @@ Page {
             }
 
             Label {
-               id:timer
-               visible: orientation == Orientation.Portrait ? 1 : 0
-               anchors.horizontalCenter: parent.horizontalCenter
-               width: parent.width*0.50
-               text: timerInfo
-               color: Theme.highlightColor
+                id:timer
+                visible: orientation == Orientation.Portrait ? 1 : 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width*0.50
+                text: timerInfo
+                color: Theme.highlightColor
             }
-          }
         }
-        VerticalScrollDecorator { flickable: container }
     }
-
+    VerticalScrollDecorator { flickable: container }
 }

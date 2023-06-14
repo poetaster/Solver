@@ -4,11 +4,8 @@ import io.thp.pyotherside 1.5
 
 Page {
     id: mainPage
-    property bool debug: false
     allowedOrientations: derivativeScreenOrientation
     property bool debug: true
-
-
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
             if (debug) console.debug("port")
@@ -20,8 +17,8 @@ Page {
             numColumns= 100
         }
         if (debug) console.debug(Orientation.Portrait)
-        //console.debug(numColumns)
-        calculateResultSolver()
+        console.debug(numColumns)
+        //calculateResultSolver()
     }
     PageHeader {
        title: cName
@@ -29,19 +26,19 @@ Page {
 
     VisualItemModel {
         id: visualModel
-        //Derivative {}
+        Derivative {}
         Solver {}
-        //Integral {}
-        //Limit {}
+        Integral {}
+        Limit {}
     }
 
-    /*SlideshowView {
+    SlideshowView {
         id: slideshow
         width: parent.width
         height: parent.height
         //itemWidth: isTablet ? Math.round(parent.width) : parent.width
         //itemHeight: height
-        clip: true
+        //clip: true
         model: visualModel
         onCurrentIndexChanged: {
             //navigation.slideshowIndexChanged(currentIndex)
@@ -54,5 +51,5 @@ Page {
         }
         Component.onCompleted: {
         }
-    }*/
+    }
 }

@@ -22,11 +22,13 @@ Page {
     }
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
+            if (debug) console.debug("port")
+            tAreaH = _screenHeight * 3/5 //derivative_Column.childrenRect.height * .6
             numColumns = 40    // Portrait
-            tAreaH = page.height * 1000
         } else {
-            tAreaH = 450
-            numColumns= 80
+            if (debug) console.debug("land")
+            tAreaH = _screenHeight * 1/5
+            numColumns= 100
         }
         if (debug) console.debug(numColumns)
         calculateResultLimit()
@@ -77,9 +79,9 @@ Page {
         Column {
             id : limit_Column
             width: parent.width
-            height: parent.height * .59 - Theme.paddingLarge
+            height: parent.height * 3/5 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
-            topPadding: Theme.paddingLarge * 5
+            topPadding: Theme.paddingLarge * 3
 
             TextArea {
                 id: result_TextArea
@@ -111,10 +113,9 @@ Page {
         }
         Column {
             id : input_Column
-            width: parent.width
-            height:  parent.height * .40 - Theme.paddingLarge
+            width: page.width
             spacing: Theme.paddingSmall
-            anchors.top: limit_Column.bottom
+            anchors.bottom: parent.bottom
 
             Row {
                 width: parent.width
