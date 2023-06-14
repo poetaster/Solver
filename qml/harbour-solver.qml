@@ -27,23 +27,21 @@ ApplicationWindow {
     property string timerInfo: ''
     property int tAreaH: 1000
     property string cName: 'Derivative'
+    property string showEquator: 'true'
     property int derivativeScreenOrientation: Orientation.Portrait | Orientation.Landscape
 
-    initialPage: Component { Derivative { } }
+    initialPage: Component { Derivative{} }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
-
     Python {
         id: py
 
         Component.onCompleted: {
-            // Add the Python library directory to the import path
 
+            // Add the Python library directory to the import path
             setHandler('timerPush', timerPushHandler);
 
             var pythonpath = Qt.resolvedUrl('python').substr('file://'.length);
             addImportPath(pythonpath);
-
-            console.log(pythonpath);
 
             // Asynchronous module importing
             importModule('solver', function() {

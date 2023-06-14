@@ -10,18 +10,20 @@ Page {
     id: derivativePage
 
     allowedOrientations: derivativeScreenOrientation
+    property bool debug: true
+    property string showEquator: 'true'
+
     function calculateResultSolver() {
         result_TextArea.text = 'Calculating ...'
         py.call('solver.calculate_Solver', [expressionLeft.text,expressionRight.text,var1_TextField.text,var2_TextField.text,var3_TextField.text,numColumns,showEquator,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
             result_TextArea.text = result;
         })
     }
-    property bool debug: true
 
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
             if (debug) console.debug("port")
-            tAreaH =  1000
+            tAreaH =  800
             numColumns = 40    // Portrait
         } else {
             if (debug) console.debug("land")
@@ -72,7 +74,7 @@ Page {
         Column {
             id : derivative_Column
             width: parent.width
-            height: parent.height * 0.65 - Theme.paddingLarge // childrenRect.height
+            height: parent.height * 0.45 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
             topPadding: Theme.paddingLarge * 3
 
@@ -95,7 +97,7 @@ Page {
                 /* for the cover we scale font px values */
                 /* on the cover we can use html */
                 function scaleText(text) {
-                    const txt = '<FONT COLOR="lightblue" SIZE="10px"><pre>'
+                    const txt = '<FONT COLOR="lightblue" SIZE="16px"><pre>'
                     txt = txt + text + '<pre></FONT>'
                     return txt
                 }
@@ -104,13 +106,20 @@ Page {
           Column {
             id : input_Column
             width: parent.width
-            height:  parent.height * .35
+            height:  parent.height * .55 - Theme.paddingLarge
             spacing: Theme.paddingSmall
             //anchors.top: derivative_Column.bottom
             //anchors.bottomMargin: Theme.paddingLarge
+            Row{
+            //anchors.leftMargin: Theme.paddingLarge
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+            spacing: Theme.paddingLarge
             TextField {
                 id: expressionLeft
-                width: parent.width * 1/2 - Theme.paddingLarge
+                width: parent.width / 2 - Theme.paddingLarge
                 inputMethodHints: Qt.ImhNoAutoUppercase
                 label: qsTr("Exp. Left")
                 placeholderText: "6/(5-sqrt(x))"
@@ -121,7 +130,7 @@ Page {
             }
             TextField {
                 id: expressionRight
-                width: parent.width * 1/2 - Theme.paddingLarge
+                width: parent.width  / 2 - Theme.paddingLarge
                 inputMethodHints: Qt.ImhNoAutoUppercase
                 label: qsTr("Exp. Right")
                 placeholderText: "sqrt(x)"
@@ -130,31 +139,20 @@ Page {
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: var1_TextField.focus = true
             }
+          }
             Grid {
                 id: diffs_Item
                 anchors {left: parent.left; right: parent.right}
                 width: parent.width
                 rows: 1
-                columns: 6
+                columns: 3
                 TextField {
                    id: var1_TextField
                    width: parent.width*0.20
                    inputMethodHints: Qt.ImhNoAutoUppercase
-                   label: qsTr("Var.1")
+                   label: qsTr("Solve for:")
                    placeholderText: "x"
                    text: "x"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: numVar1_TextField.focus = true
-                }
-                TextField {
-                   id: numVar1_TextField
-                   width: parent.width*0.13
-                   inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                   validator: IntValidator { bottom: 0; top: 9999 }
-                   label: "#"
-                   placeholderText: "1"
-                   text: "1"
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
                    EnterKey.onClicked: var2_TextField.focus = true
@@ -165,19 +163,7 @@ Page {
                    inputMethodHints: Qt.ImhNoAutoUppercase
                    label: qsTr("Var.2")
                    placeholderText: "y"
-                   text: "y"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: numVar2_TextField.focus = true
-                }
-                TextField {
-                   id: numVar2_TextField
-                   width: parent.width*0.13
-                   inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                   validator: IntValidator { bottom: 0; top: 9999 }
-                   label: "#"
-                   placeholderText: "0"
-                   text: "0"
+                   text: ""
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
                    EnterKey.onClicked: var3_TextField.focus = true
@@ -188,22 +174,10 @@ Page {
                    inputMethodHints: Qt.ImhNoAutoUppercase
                    label: qsTr("Var.3")
                    placeholderText: "z"
-                   text: "z"
+                   text: ""
                    EnterKey.enabled: text.length > 0
                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                   EnterKey.onClicked: numVar3_TextField.focus = true
-                }
-                TextField {
-                   id: numVar3_TextField
-                   width: parent.width*0.13
-                   inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhDigitsOnly
-                   validator: IntValidator { bottom: 0; top: 9999 }
-                   label: "#"
-                   placeholderText: "0"
-                   text: "0"
-                   EnterKey.enabled: text.length > 0
-                   EnterKey.iconSource: "image://theme/icon-m-enter-accept"
-                   EnterKey.onClicked: derivative_Column.calculateResultDerivative()
+                   EnterKey.onClicked: calculate_Button.focus = true
                 }
             }
             Row {

@@ -482,12 +482,12 @@ def calculate_Solver(expressionLeft, expressionRight, var1,var2,var3,\
     variable3Equator = var3.strip()
     # assemble command
     EquatorExpr = '(' + solveFor
-    if variable1Equator):
-        EquatorExpr += ','+variable1Equator+'
-    if variable2Equator):
-        EquatorExpr += ','+variable2Equator+'
-    if variable3Equator):
-        EquatorExpr += ','+variable3Equator+'
+    if (variable1Equator):
+        EquatorExpr += ','+variable1Equator
+    if (variable2Equator):
+        EquatorExpr += ','+variable2Equator
+    if (variable3Equator):
+        EquatorExpr += ','+variable3Equator
     EquatorExpr += u')'
 
     # execute 'solve'
@@ -552,6 +552,7 @@ def calculate_Solver(expressionLeft, expressionRight, var1,var2,var3,\
         if (type(resultEquatorSimp) != str):
             resultOutput = python(resultEquatorSimp)
 
+
     if showTime and (timeEquator > 0.0):
         pyotherside.send("timerPush", timeEquator)
         result = u'\n\n'
@@ -559,13 +560,12 @@ def calculate_Solver(expressionLeft, expressionRight, var1,var2,var3,\
     else:
         result = u"\n\n"
     if showEquator and nonCalculatedEquatorOutput:
+        result += fixUnicodeText(printing.pretty(sympify(solveFor))) + '\n\n'
         result+= nonCalculatedEquatorOutput + '\n\n'
-        #result += u'<FONT COLOR="LightBlue">'+(nonCalculatedEquatorOutput.replace(' ','&nbsp;')).replace("\n","<br>")+'<br>=</FONT><br>'
     if (type(resultEquatorSimp) != str):
         result+= resultOutput + '\n\n'
         #result += (resultOutput.replace(' ','&nbsp;')).replace("\n","<br>")
     else:
         result+= resultOutput + '\n\n'
-        #result += u'<FONT COLOR="Red">'+((resultOutput.replace(' ','&nbsp;')).replace("\n","<br>"))+'</FONT>'
     return result
 

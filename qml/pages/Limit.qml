@@ -60,6 +60,10 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
+                text: "Solver"
+                onClicked: pageStack.replace(Qt.resolvedUrl("Solver.qml"))
+            }
+            MenuItem {
                 text: "Derivative"
                 onClicked: pageStack.replace(Qt.resolvedUrl("Derivative.qml"))
             }
