@@ -24,7 +24,7 @@ Source0:    %{name}-%{version}.tar.bz2
 Requires:   libsailfishapp-launcher
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.2
-Requires:   python3-sympy
+#Requires:   python3-sympy
 
 BuildRequires:  qt5-qttools-linguist
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.3
@@ -38,7 +38,7 @@ BuildRequires:  python3-setuptools
 
 
 %description
-Solver - Calculation of mathematical derivatives, integrals, limits using Python & SymPy module
+Solver - Calculation of mathematical derivatives, integrals, limits and Solvers using Python & SymPy module
 
 %if "%{?vendor}" == "chum"
 PackageName: Solver
@@ -87,18 +87,18 @@ desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
    %{buildroot}%{_datadir}/applications/*.desktop
 
-#cd %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
-#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
-#rm -rf  %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
+cd %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
+python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+rm -rf  %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
 
-#cd %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
-#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
-#rm -rf %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
+cd %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
+python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+rm -rf %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
 
-#rm -rf %{buildroot}/%{_datadir}/%{name}/share
-#rm -rf %{buildroot}/%{_datadir}/%{name}/bin
+rm -rf %{buildroot}/%{_datadir}/%{name}/share
+rm -rf %{buildroot}/%{_datadir}/%{name}/bin
 
-#cd %_builddir
+cd %_builddir
 
 %files
 %defattr(-,root,root,-)

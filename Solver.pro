@@ -37,11 +37,11 @@ OTHER_FILES += qml/haroub-solver.qml \
 python.path = /usr/share/$${TARGET}/qml
 python.files = python
 
-#libs.path = /usr/share/$${TARGET}
-#libs.files = lib
+libs.path = /usr/share/$${TARGET}
+libs.files = lib
 
 INSTALLS += python
-#INSTALLS += libs
+INSTALLS += libs
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
