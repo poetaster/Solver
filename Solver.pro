@@ -19,6 +19,7 @@ OTHER_FILES += qml/haroub-solver.qml \
     qml/pages/Derivative.qml \
     qml/pages/Integral.qml \
     qml/pages/Limit.qml \
+    qml/pages/Solver.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/HelpPage.qml \
@@ -43,3 +44,6 @@ INSTALLS += python
 #INSTALLS += libs
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
+
+DISTFILES += \
+    qml/pages/Solver.qml

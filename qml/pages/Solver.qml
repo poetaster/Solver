@@ -10,13 +10,13 @@ Page {
     id: derivativePage
 
     allowedOrientations: derivativeScreenOrientation
-    function calculateResultDerivative() {
+    function calculateResultSolver() {
         result_TextArea.text = 'Calculating ...'
-        py.call('solver.calculate_Derivative', [expression_TextField.text,var1_TextField.text,numVar1_TextField.text,var2_TextField.text,numVar2_TextField.text,var3_TextField.text,numVar3_TextField.text,numColumns,showDerivative,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
+        py.call('solver.calculate_Solver', [expressionLeft.text,expressionRight.text,var1_TextField.text,var2_TextField.text,var3_TextField.text,numColumns,showEquator,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
             result_TextArea.text = result;
         })
     }
-    property bool debug: false
+    property bool debug: true
 
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
@@ -28,12 +28,12 @@ Page {
             tAreaH = 450
             numColumns= 100
         }
-        if (debug) console.debug(Orientation.Portrait)//_pictureRotation)
+        if (debug) console.debug(Orientation.Portrait)
         //console.debug(numColumns)
-        calculateResultDerivative()
+        calculateResultSolver()
     }
     PageHeader {
-        title: qsTr("Derivative")
+        title: qsTr("Solver")
     }
     SilicaFlickable {
         id: container
@@ -42,7 +42,7 @@ Page {
         width: parent.width
 
         Component.onCompleted: {
-            cName = "Derivative"
+            cName = "Solver"
         }
         PullDownMenu {
             MenuItem {
@@ -56,10 +56,6 @@ Page {
             MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
-            }
-            MenuItem {
-                text: "Solver"
-                onClicked: pageStack.replace(Qt.resolvedUrl("Solver.qml"))
             }
             MenuItem {
                 text: "Integral"
@@ -113,12 +109,23 @@ Page {
             //anchors.top: derivative_Column.bottom
             //anchors.bottomMargin: Theme.paddingLarge
             TextField {
-                id: expression_TextField
-                width: parent.width
+                id: expressionLeft
+                width: parent.width * 1/2 - Theme.paddingLarge
                 inputMethodHints: Qt.ImhNoAutoUppercase
-                label: qsTr("Expression")
-                placeholderText: "sqrt(x/(x**3+1))"
-                text: "x * sin(x**2) + 1"
+                label: qsTr("Exp. Left")
+                placeholderText: "6/(5-sqrt(x))"
+                text: "6/(5-sqrt(x))"
+                EnterKey.enabled: text.length > 0
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: expressionRight.focus = true
+            }
+            TextField {
+                id: expressionRight
+                width: parent.width * 1/2 - Theme.paddingLarge
+                inputMethodHints: Qt.ImhNoAutoUppercase
+                label: qsTr("Exp. Right")
+                placeholderText: "sqrt(x)"
+                text: "sqrt(x)"
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-enter-next"
                 EnterKey.onClicked: var1_TextField.focus = true
@@ -218,7 +225,7 @@ Page {
                     width: parent.width * 2/3 - Theme.paddingLarge
                     text: qsTr("Calculate")
                     focus: true
-                    onClicked: calculateResultDerivative()
+                    onClicked: calculateResultSolver()
                 }
 
             }

@@ -453,3 +453,119 @@ def calculate_Integral(expression,var1,var2,var3,varSup1,varSup2,varSup3,varInf1
         #result += u'<FONT COLOR="Red">'+((resultOutput.replace(' ','&nbsp;')).replace("\n","<br>"))+'</FONT>'
     return result
 
+# Solver
+nonCalculatedEquator = ""
+nonCalculatedEquatorOutput = ""
+resultEquator = ""
+resultEquatorSimp = ""
+resultOutput = ""
+timeEquator = 0.0
+EquatorErrorMessage = 'Error: Solution not calculated'
+
+numerApprox = False
+
+def calculate_Solver(expressionLeft, expressionRight, var1,var2,var3,\
+                         numColumns,showEquator,showTime,numerApprox,numDigText,\
+                         simplifyResult,outputResult):
+    global nonCalculatedEquator, nonCalculatedEquatorOutput, resultEquator, \
+           resultEquatorSimp, resultOutput, timeEquator
+
+    init_printing(use_unicode=True, num_columns=numColumns)
+    timet1=time.time()
+
+    # First build the equation
+    solveFor = 'Eq(' + expressionLeft +',' + expressionRight +')'
+
+    # now assemble the vars to solve for
+    variable1Equator = var1.strip()
+    variable2Equator = var2.strip()
+    variable3Equator = var3.strip()
+    # assemble command
+    EquatorExpr = '(' + solveFor
+    if variable1Equator):
+        EquatorExpr += ','+variable1Equator+'
+    if variable2Equator):
+        EquatorExpr += ','+variable2Equator+'
+    if variable3Equator):
+        EquatorExpr += ','+variable3Equator+'
+    EquatorExpr += u')'
+
+    # execute 'solve'
+    try:
+        nonCalculatedEquator = sympify('solve'+EquatorExpr)
+    except:
+        nonCalculatedEquator = 'solve'+EquatorExpr
+    '''
+    try:
+        if numerApprox:
+            resultEquator = sympify('N(diff'+EquatorExpr+','+numDigText+')')
+        else:
+            resultEquator = sympify('diff'+EquatorExpr)
+    except:
+        resultEquator = EquatorErrorMessage
+    '''
+
+    if (resultEquator) and (type(resultEquator) != str):
+        if (simplifyResult == simplifyType['none']) or (numerApprox):
+            resultEquatorSimp = sympify(resultEquator)
+        elif simplifyResult == simplifyType['expandterms']:
+            resultEquatorSimp = sympify(mapexpr(resultEquator,expand))
+        elif simplifyResult == simplifyType['simplifyterms']:
+            resultEquatorSimp = sympify(mapexpr(resultEquator,simplify))
+        elif simplifyResult == simplifyType['expandall']:
+            resultEquatorSimp = sympify(expand(resultEquator))
+        elif simplifyResult == simplifyType['simplifyall']:
+            resultEquatorSimp = sympify(simplify(resultEquator))
+    else:
+        resultEquatorSimp = resultEquator
+
+    timet2=time.time()
+    timeEquator = timet2-timet1
+
+    nonCalculatedEquatorOutput = str(nonCalculatedEquator)
+    resultOutput = str(resultEquatorSimp)
+    if outputResult == outputType['bidimensional']:
+        if (type(nonCalculatedEquator) != str):
+            nonCalculatedEquatorOutput = fixUnicodeText(printing.pretty(nonCalculatedEquator))
+        if (type(resultEquatorSimp) != str):
+            resultOutput = fixUnicodeText(printing.pretty(resultEquatorSimp))
+    elif outputResult == outputType['latex']:
+        if (type(nonCalculatedEquator) != str):
+            nonCalculatedEquatorOutput = latex(nonCalculatedEquator)
+        if (type(resultEquatorSimp) != str):
+            resultOutput = latex(resultEquatorSimp)
+#    elif outputResult == outputType['mathml']:
+#        if (type(nonCalculatedEquator) != str):
+#            nonCalculatedEquatorOutput = str(mathml(nonCalculatedEquator))
+#        if (type(resultEquatorSimp) != str):
+#            resultOutput = str(print_mathml(resultEquatorSimp))
+    elif outputResult == outputType['c']:
+        if (type(resultEquatorSimp) != str):
+            resultOutput = ccode(resultEquatorSimp)
+    elif outputResult == outputType['fortran']:
+        if (type(resultEquatorSimp) != str):
+            resultOutput = fcode(resultEquatorSimp)
+    elif outputResult == outputType['javascript']:
+        if (type(resultEquatorSimp) != str):
+            resultOutput = jscode(resultEquatorSimp)
+    elif outputResult == outputType['python']:
+        if (type(resultEquatorSimp) != str):
+            resultOutput = python(resultEquatorSimp)
+
+    if showTime and (timeEquator > 0.0):
+        pyotherside.send("timerPush", timeEquator)
+        result = u'\n\n'
+        #result = '<FONT COLOR="LightGreen">'+("Calculated in %fs :" % timeEquator)+'</FONT><br><br>'
+    else:
+        result = u"\n\n"
+    if showEquator and nonCalculatedEquatorOutput:
+        result+= nonCalculatedEquatorOutput + '\n\n'
+        #result += u'<FONT COLOR="LightBlue">'+(nonCalculatedEquatorOutput.replace(' ','&nbsp;')).replace("\n","<br>")+'<br>=</FONT><br>'
+    if (type(resultEquatorSimp) != str):
+        result+= resultOutput + '\n\n'
+        #result += (resultOutput.replace(' ','&nbsp;')).replace("\n","<br>")
+    else:
+        result+= resultOutput + '\n\n'
+        #result += u'<FONT COLOR="Red">'+((resultOutput.replace(' ','&nbsp;')).replace("\n","<br>"))+'</FONT>'
+    return result
+
