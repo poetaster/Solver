@@ -8,4 +8,10 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Wed Jun 14 2023 Mark Washeim <blueprint@poetaster.de> - 0.2.0
+- [Release] chum updates
+- [Release] obs and harbour
 
+* Tue Jun 13 2023 Mark Washeim <blueprint@poetaster.de> - 0.1.0
+- [Release] rename stuff for harbour compatible release
+- [Init] initial addition of the combined files of derivative, integral and limit

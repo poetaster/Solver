@@ -9,13 +9,13 @@ Page {
 
      Item {
         id: aboutInfos
-        property string version:'0.1.0'
+        property string version:'0.3.0'
         property string text:  if(true) {
                 '<style>a:link { color: ' + Theme.primaryColor  + '; }</style>' +
-                        'Solver calculates Derivatives, Integrals and Limits<br>derivatives symbolically and numerically<br>' +
+                        'Solver calculates Derivatives, Integrals,<br> Limits and Solutions, symbolically and numerically<br>' +
                         '<br><br>Solver is written using<br>Python 3, SymPy, PyOtherSide, Qt5,<br>Qt Quick 2 (Silica Components).' +
                         '<br><br>Based on ideas from Roberto Colistete Jr.' +
-                        '<br><br>individual apps for these 3 functions.' +
+                        '<br><br>individual apps for 3 of these functions.' +
                         '<br>Free & Open Source :' +
                         '<br><a href="http://www.gnu.org/licenses/gpl-3.0.html"><b>License GPLv3</b></a>' +
                         '<br><br>Source :' +
