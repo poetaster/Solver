@@ -6,10 +6,12 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.5
 import "pages"
-
+import "components"
+import "js/storage.js" as Store
 
 ApplicationWindow {
-
+    id: root
+    property int derivativeScreenOrientation: Orientation.Portrait | Orientation.Landscape
     property int orientation_index: 2
     property int integralType_index : 0
     property int numerIntegralType_index : 1
@@ -28,11 +30,15 @@ ApplicationWindow {
     property int tAreaH: 1000
     property string cName: 'Derivative'
     property string showEquator: 'true'
-    property int derivativeScreenOrientation: Orientation.Portrait | Orientation.Landscape
+    property var notificationObj
+    property var settingsObj
 
+    notificationObj: pageStack.currentPage.notification
     initialPage: Component { Integral{} }
-
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
+
+
     Python {
         id: py
 
@@ -49,6 +55,8 @@ ApplicationWindow {
                 resultText='Python version ' + evaluate('solver.versionPython') + '.\n'
                 resultText+='SymPy version ' + evaluate('solver.versionSymPy') + '\n'
                 timerInfo = evaluate('("loaded in %fs" % solver.loadingtimeSymPy)')
+               notificationObj.notify(resultText + timerInfo)
+
                /*
                 console.log('Python version: ' + evaluate('solver.versionPython'));
                 result_TextArea.text+='<FONT COLOR="LightGreen">Using Python version ' + evaluate('solver.versionPython') + '.</FONT>'
@@ -60,6 +68,16 @@ ApplicationWindow {
         // shared via timerInfo with cover
         function timerPushHandler(pTimer) {
             timerInfo =  pTimer + ' elapsed'
+        }
+
+        function engineLoadedHandler(){
+            notificationObj.notify("Symbolic engine loaded");
+            root.engineLoaded = true;
+
+            //changeTrigonometricUnit(settingsObj.angleUnit);
+            //changeReprFloatPrecision(settingsObj.reprFloatPrecision);
+            //enableSymbolicMode(settingsObj.symbolicMode);
+            //enableAutoSimplify(settingsObj.autoSimplify);
         }
         onError: {
             // when an exception is raised, this error handler will be called

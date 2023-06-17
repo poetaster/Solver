@@ -3,6 +3,7 @@
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.2
+import "../components"
 
 Page {
     id: page
@@ -35,6 +36,15 @@ Page {
         }
         if (debug) console.debug(numColumns)
         calculateResultLimit()
+    }
+    property alias notification: popup
+    Popup {
+        id: popup
+        z: 10
+        timeout: 3000
+        padding: Theme.paddingSmall
+        defaultColor: Theme.highlightColor
+        labelMargin: Theme.paddingSmall
     }
     PageHeader {
         id: header

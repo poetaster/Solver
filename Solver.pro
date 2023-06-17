@@ -16,6 +16,7 @@ CONFIG += sailfishapp_qml
 
 OTHER_FILES += qml/haroub-solver.qml \
     qml/cover/CoverPage.qml \
+    qml/components/* \
     qml/pages/Derivative.qml \
     qml/pages/Integral.qml \
     qml/pages/Limit.qml \
@@ -25,6 +26,7 @@ OTHER_FILES += qml/haroub-solver.qml \
     qml/pages/HelpPage.qml \
     qml/pages/derivative.py \
     qml/pages/DejaVuSansMono.ttf \
+    qml/js/strorage.js \
     rpm/harbour-solver.spec \
     rpm/harbour-solver.changes \
     harbour-solver.desktop \

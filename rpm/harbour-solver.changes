@@ -8,6 +8,11 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Wed Jun 14 2023 Mark Washeim <blueprint@poetaster.de> - 0.3.0
+- [Release] update versions, minor test updates, changes
+- [Feature] solve(Eq, Var) implemented
+- [Feature] add solver page/functions
+
 * Wed Jun 14 2023 Mark Washeim <blueprint@poetaster.de> - 0.2.0
 - [Release] chum updates
 - [Release] obs and harbour

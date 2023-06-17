@@ -5,7 +5,7 @@
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.2
-
+import "../components"
 Page {
     id: page
     function calculateResultIntegral() {
@@ -40,6 +40,18 @@ Page {
         if (debug) console.debug(numColumns)
         calculateResultIntegral()
     }
+
+    property alias notification: popup
+    Popup {
+        id: popup
+        z: 10
+        timeout: 3000
+        padding: Theme.paddingSmall
+        //defaultColor: page.secondaryHighlightColor
+        defaultColor: Theme.highlightColor
+        labelMargin: Theme.paddingSmall
+    }
+
     PageHeader {
           title: qsTr("Integral")
     }
@@ -53,6 +65,7 @@ Page {
 
         Component.onCompleted: {
             cName = "Integral"
+            result_TextArea.text = resultText
         }
         VerticalScrollDecorator { flickable: container }
 
