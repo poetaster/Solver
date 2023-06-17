@@ -16,7 +16,7 @@ Page {
             result_TextArea.text = result;
         })
     }
-    property bool debug: true
+    property bool debug: false
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
             if (debug) console.debug("port")

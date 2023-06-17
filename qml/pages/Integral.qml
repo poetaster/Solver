@@ -21,7 +21,7 @@ Page {
         })
     }
     allowedOrientations: derivativeScreenOrientation
-    property bool debug: true
+    property bool debug: false
 
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {

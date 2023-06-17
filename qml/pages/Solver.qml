@@ -10,7 +10,7 @@ Page {
     id: page
 
     allowedOrientations: derivativeScreenOrientation
-    property bool debug: true
+    property bool debug: false
     property string showEquator: 'true'
 
     function calculateResultSolver() {
@@ -62,14 +62,6 @@ Page {
             if(debug) console.debug(input_Column.childrenRect.height)
         }
         PullDownMenu {
-            MenuItem {
-                text: "About"
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
-            }
-            MenuItem {
-                text: "Help"
-                onClicked: pageStack.push(Qt.resolvedUrl("HelpPage.qml"))
-            }
             MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
