@@ -23,12 +23,15 @@ Page {
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
             if (debug) console.debug("port")
+            drawer.open = true
             tAreaH = _screenHeight * 3/5 //derivative_Column.childrenRect.height * .6
             numColumns = 40    // Portrait
         } else {
             if (debug) console.debug("land")
-            tAreaH = _screenHeight * 1/5
+            tAreaH = _screenHeight * 2/5
             numColumns= 100
+            drawer.height = 1/5 * page.height + Theme.paddingLarge  // * _screenHeight //- Theme.paddingLarge
+            drawer.open = false
         }
         if (debug) console.debug(numColumns)
         calculateResultLimit()
@@ -111,95 +114,111 @@ Page {
                 }
             }
         }
-        Column {
-            id : input_Column
-            width: page.width
-            spacing: Theme.paddingSmall
-            anchors.bottom: parent.bottom
+        DockedPanel{
+            id: drawer
+            width: parent.width
+            height: 1/4 * parent.height
+            dock: Dock.bottom
+            Column {
+                id : input_Column
+                width: page.width
+                spacing: Theme.paddingSmall
 
-            Row {
-                width: parent.width
-                TextField {
-                    id: expression_TextField
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    placeholderText: "sin(x)/x"
-                    label: qsTr("Limit expression")
-                    width: parent.width * 0.5
-                    text : "sin(x)/x"
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: variable_TextField.focus = true
-                }
-                ComboBox {
-                    id: direction_ComboBox
-                    width: page.width*0.5
-                    label: qsTr("Direction")
-                    currentIndex: 0
-                    menu: ContextMenu {
-                        MenuItem { text: "Bilateral" }
-                        MenuItem { text: "Left" }
-                        MenuItem { text: "Right" }
+                Row {
+                    width: parent.width
+                    TextField {
+                        id: expression_TextField
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        placeholderText: "sin(x)/x"
+                        label: qsTr("Limit expression")
+                        width: parent.width * 0.5
+                        text : "sin(x)/x"
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: variable_TextField.focus = true
+                    }
+                    ComboBox {
+                        id: direction_ComboBox
+                        width: page.width*0.5
+                        label: qsTr("Direction")
+                        currentIndex: 0
+                        menu: ContextMenu {
+                            MenuItem { text: "Bilateral" }
+                            MenuItem { text: "Left" }
+                            MenuItem { text: "Right" }
+                        }
                     }
                 }
-            }
-            Row {
-                width: parent.width
-                TextField {
-                    id: variable_TextField
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    width: parent.width*0.5
-                    placeholderText: "x"
-                    label: qsTr("Variable")
-                    text : "x"
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: point_TextField.focus = true
+                Row {
+                    width: parent.width
+                    TextField {
+                        id: variable_TextField
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        width: parent.width*0.5
+                        placeholderText: "x"
+                        label: qsTr("Variable")
+                        text : "x"
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: point_TextField.focus = true
+                    }
+                    TextField {
+                        id: point_TextField
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        width: parent.width*0.5
+                        placeholderText: "0"
+                        label: qsTr("Point")
+                        text : "5"
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-accept"
+                        EnterKey.onClicked: calculateResultLimit()
+                    }
                 }
-                TextField {
-                    id: point_TextField
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    width: parent.width*0.5
-                    placeholderText: "0"
-                    label: qsTr("Point")
-                    text : "5"
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-accept"
-                    EnterKey.onClicked: calculateResultLimit()
+                Row {
+                    spacing: Theme.paddingLarge
+                    anchors {
+                        //parent.horizontalCenter
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: Theme.paddingLarge
+                    }
+                    Button {
+                        id: copy_Button
+                        width: parent.width * 1/3 - Theme.paddingLarge
+                        text: qsTr("Copy")
+                        onClicked: Clipboard.text = result_TextArea.text
+                    }
+                    Button {
+                        id: calculate_Button
+                        width: parent.width * 2/3 - Theme.paddingLarge
+                        text: qsTr("Calculate")
+                        focus: true
+                        onClicked: calculateResultLimit()
+                    }
+
                 }
-            }
-            Row {
-                spacing: Theme.paddingLarge
-                anchors {
-                    //parent.horizontalCenter
-                    left: parent.left
-                    right: parent.right
-                    leftMargin: Theme.paddingLarge
-                }
-                Button {
-                    id: copy_Button
-                    width: parent.width * 1/3 - Theme.paddingLarge
-                    text: qsTr("Copy")
-                    onClicked: Clipboard.text = result_TextArea.text
-                }
-                Button {
-                    id: calculate_Button
-                    width: parent.width * 2/3 - Theme.paddingLarge
-                    text: qsTr("Calculate")
-                    focus: true
-                    onClicked: calculateResultLimit()
+                Label {
+                    id:timer
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    visible: showTime && isPortrait
+                    width: parent.width*0.50
+                    //width: parent.width  - Theme.paddingLarge
+                    text: timerInfo
+                    color: Theme.highlightColor
                 }
 
             }
-            Label {
-                id:timer
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: orientation == Orientation.Portrait ? 1 : 0
-                width: parent.width*0.50
-                //width: parent.width  - Theme.paddingLarge
-                text: timerInfo
-                color: Theme.highlightColor
-            }
-
         }
+    }
+    IconButton{
+        id: upB
+        anchors {
+            horizontalCenter: page.horizontalCenter;
+            bottom: page.bottom
+        }
+        visible: ! drawer.open
+        icon.source: "image://theme/icon-m-up"
+        onClicked: drawer.open = true
+
     }
 }

@@ -22,12 +22,15 @@ Page {
 
     onOrientationChanged:  {
         if ( orientation === Orientation.Portrait ) {
+            drawer.open = true
             if (debug) console.debug("port")
             tAreaH = _screenHeight * 3/5 //derivative_Column.childrenRect.height * .6
             numColumns = 40    // Portrait
         } else {
             if (debug) console.debug("land")
-            tAreaH = _screenHeight * 1/5
+            tAreaH = _screenHeight * 2/5
+            drawer.height = 1/5 * page.height + Theme.paddingLarge  // * _screenHeight //- Theme.paddingLarge
+            drawer.open = false
             numColumns= 100
         }
         if (debug) console.debug(Orientation.Portrait)
@@ -81,9 +84,9 @@ Page {
         Column {
             id : solver_Column
             width: parent.width
-            height: parent.height * 3/5 - Theme.paddingLarge // childrenRect.height
+            height: parent.height * 3/4 - Theme.paddingLarge // childrenRect.height
             spacing: Theme.paddingSmall
-            topPadding: Theme.paddingLarge * 3
+            topPadding: Theme.paddingLarge
             TextArea {
                 id: result_TextArea
                 height: tAreaH
@@ -108,115 +111,134 @@ Page {
                     return txt
                 }
             }
+
         }
-        Column {
-            id : input_Column
-            width: page.width
-            spacing: Theme.paddingSmall
-            anchors.bottom: parent.bottom
-            Row{
-                //anchors.leftMargin: Theme.paddingLarge
-                anchors {
-                    left: parent.left
-                    right: parent.right
+        DockedPanel{
+            id: drawer
+            width: parent.width
+            height: 1/4 * parent.height
+            dock: Dock.bottom
+            Column {
+                id : input_Column
+                width: page.width
+                spacing: Theme.paddingSmall
+                //anchors.bottom: parent.bottom
+                Row{
+                    //anchors.leftMargin: Theme.paddingLarge
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        //top: parent.top
+                    }
+                    spacing: Theme.paddingLarge
+                    TextField {
+                        id: expressionLeft
+                        width: parent.width / 2 - Theme.paddingLarge
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        label: qsTr("Exp. Left")
+                        placeholderText: "6/(5-sqrt(x))"
+                        text: "a*x**2 + b*x + c"
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: expressionRight.focus = true
+                    }
+                    TextField {
+                        id: expressionRight
+                        width: parent.width  / 2 - Theme.paddingLarge
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        label: qsTr("Exp. Right")
+                        placeholderText: "sqrt(x)"
+                        text: "0"
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: var1_TextField.focus = true
+                    }
                 }
-                spacing: Theme.paddingLarge
-                TextField {
-                    id: expressionLeft
-                    width: parent.width / 2 - Theme.paddingLarge
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    label: qsTr("Exp. Left")
-                    placeholderText: "6/(5-sqrt(x))"
-                    text: "a*x**2 + b*x + c"
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: expressionRight.focus = true
+                Grid {
+                    id: diffs_Item
+                    anchors {left: parent.left; right: parent.right}
+                    width: parent.width
+                    rows: 1
+                    columns: 3
+                    TextField {
+                        id: var1_TextField
+                        width: parent.width*0.20
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        label: qsTr("Solve for:")
+                        placeholderText: "x"
+                        text: "x"
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: var2_TextField.focus = true
+                    }
+                    TextField {
+                        id: var2_TextField
+                        width: parent.width*0.20
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        label: qsTr("Var.2")
+                        placeholderText: "y"
+                        text: ""
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: var3_TextField.focus = true
+                    }
+                    TextField {
+                        id: var3_TextField
+                        width: parent.width*0.20
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        label: qsTr("Var.3")
+                        placeholderText: "z"
+                        text: ""
+                        EnterKey.enabled: text.length > 0
+                        EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                        EnterKey.onClicked: calculate_Button.focus = true
+                    }
                 }
-                TextField {
-                    id: expressionRight
-                    width: parent.width  / 2 - Theme.paddingLarge
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    label: qsTr("Exp. Right")
-                    placeholderText: "sqrt(x)"
-                    text: "0"
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: var1_TextField.focus = true
-                }
-            }
-            Grid {
-                id: diffs_Item
-                anchors {left: parent.left; right: parent.right}
-                width: parent.width
-                rows: 1
-                columns: 3
-                TextField {
-                    id: var1_TextField
-                    width: parent.width*0.20
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    label: qsTr("Solve for:")
-                    placeholderText: "x"
-                    text: "x"
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: var2_TextField.focus = true
-                }
-                TextField {
-                    id: var2_TextField
-                    width: parent.width*0.20
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    label: qsTr("Var.2")
-                    placeholderText: "y"
-                    text: ""
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: var3_TextField.focus = true
-                }
-                TextField {
-                    id: var3_TextField
-                    width: parent.width*0.20
-                    inputMethodHints: Qt.ImhNoAutoUppercase
-                    label: qsTr("Var.3")
-                    placeholderText: "z"
-                    text: ""
-                    EnterKey.enabled: text.length > 0
-                    EnterKey.iconSource: "image://theme/icon-m-enter-next"
-                    EnterKey.onClicked: calculate_Button.focus = true
-                }
-            }
-            Row {
-                anchors.leftMargin: Theme.paddingLarge
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                spacing: Theme.paddingLarge
-                Button {
-                    id: copy_Button
-                    width: parent.width * 1/3 - Theme.paddingLarge
-                    text: qsTr("Copy")
-                    onClicked: Clipboard.text = result_TextArea.text
-                }
-                Button {
+                Row {
+                    id: buttonRow
+                    spacing: Theme.paddingLarge
                     anchors.leftMargin: Theme.paddingLarge
-                    id: calculate_Button
-                    width: parent.width * 2/3 - Theme.paddingLarge
-                    text: qsTr("Calculate")
-                    focus: true
-                    onClicked: calculateResultSolver()
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    Button {
+                        id: copy_Button
+                        width: parent.width * 1/3 - Theme.paddingLarge
+                        text: qsTr("Copy")
+                        onClicked: Clipboard.text = result_TextArea.text
+                    }
+                    Button {
+                        id: calculate_Button
+                        width: parent.width * 2/3 - Theme.paddingLarge
+                        text: qsTr("Calculate")
+                        focus: true
+                        onClicked: calculateResultSolver()
+                    }
+
                 }
 
-            }
-
-            Label {
-                id:timer
-                visible: orientation == Orientation.Portrait ? 1 : 0
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width*0.50
-                text: timerInfo
-                color: Theme.highlightColor
+                Label {
+                    id:timer
+                    visible: showTime && isPortrait
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width*0.50
+                    text: timerInfo
+                    color: Theme.highlightColor
+                }
             }
         }
     }
     VerticalScrollDecorator { flickable: container }
+    IconButton{
+        id: upB
+        anchors {
+            horizontalCenter: page.horizontalCenter;
+            bottom: page.bottom
+        }
+        visible: ! drawer.open
+        icon.source: "image://theme/icon-m-up"
+        onClicked: drawer.open = true
+
+    }
 }

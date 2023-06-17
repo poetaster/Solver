@@ -75,20 +75,33 @@ Page {
                 checked: showIntegral
                 onCheckedChanged : { showIntegral = checked }
             }
-            /*
+
             TextSwitch {
                 id: showTime_TextSwitch
                 text: qsTr("Show calculation time")
                 description: qsTr("before derivative result")
                 checked: showTime
                 onCheckedChanged : { showTime = checked }
-            }*/
+            }
             TextSwitch {
                 id: numerApprox_TextSwitch
                 text: qsTr("Numerical approximation")
                 description: qsTr("of the derivative result")
                 checked: numerApprox
                 onCheckedChanged : { numerApprox = checked }
+            }
+            ComboBox {
+                id: numerIntegralType_ComboBox
+                label: qsTr("Numerical integration method")
+                currentIndex: numerIntegralType_index
+                menu: ContextMenu {
+                    MenuItem { id: numerApproxDefIntegral_MenuItem ; text: qsTr("Numerical approximation of definite integral") }
+                    MenuItem { text: qsTr("Optimized for infinities") }
+                    MenuItem { text: qsTr("Optimized for smooth integrands") }
+                    onActivated: {
+                        numerIntegralType_index = index
+                    }
+                }
             }
             TextField {
                 id: numDig_TextField

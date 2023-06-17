@@ -87,18 +87,18 @@ desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
    %{buildroot}%{_datadir}/applications/*.desktop
 
-cd %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
-python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
-rm -rf  %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
+#cd %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
+#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+#rm -rf  %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
 
-cd %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
-python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
-rm -rf %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
+#cd %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
+#python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
+#rm -rf %{buildroot}/%{_datadir}/%{name}/lib/mpmath-1.2.1
 
-rm -rf %{buildroot}/%{_datadir}/%{name}/share
-rm -rf %{buildroot}/%{_datadir}/%{name}/bin
+#rm -rf %{buildroot}/%{_datadir}/%{name}/share
+#rm -rf %{buildroot}/%{_datadir}/%{name}/bin
 
-cd %_builddir
+#cd %_builddir
 
 %files
 %defattr(-,root,root,-)

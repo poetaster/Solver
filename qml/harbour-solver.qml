@@ -17,9 +17,9 @@ ApplicationWindow {
     property bool showIntegral: true
     property bool showDerivative: true
     property bool showLimit: true
-    property bool showTime: true
+    property bool showTime: false
     property bool numerApprox: false
-    property string numDigText: '15'
+    property string numDigText: '10'
     property int simplifyResult_index: 2
     property int numColumns:80
     property int outputTypeResult_index: 1
@@ -30,7 +30,7 @@ ApplicationWindow {
     property string showEquator: 'true'
     property int derivativeScreenOrientation: Orientation.Portrait | Orientation.Landscape
 
-    initialPage: Component { Derivative{} }
+    initialPage: Component { Integral{} }
 
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     Python {

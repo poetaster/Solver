@@ -354,6 +354,7 @@ def calculate_Integral(expression,var1,var2,var3,varSup1,varSup2,varSup3,varInf1
             nonCalculatedIntegral = sympify('Integral'+integrateExpr)
         except:
             nonCalculatedIntegral = 'Integral'+integrateExpr
+
         if typeIntegral == integralType['definite']:
             try:
                 resultIntegral = sympify('integrate'+integrateExpr)
