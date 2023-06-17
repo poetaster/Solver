@@ -52,17 +52,10 @@ ApplicationWindow {
 
             // Asynchronous module importing
             importModule('solver', function() {
-                resultText='Python version ' + evaluate('solver.versionPython') + '.\n'
-                resultText+='SymPy version ' + evaluate('solver.versionSymPy') + '\n'
+                resultText='Python ' + evaluate('solver.versionPython') + '.\n'
+                resultText+='SymPy ' + evaluate('solver.versionSymPy') + '\n'
                 timerInfo = evaluate('("loaded in %fs" % solver.loadingtimeSymPy)')
-               notificationObj.notify(resultText + timerInfo)
-
-               /*
-                console.log('Python version: ' + evaluate('solver.versionPython'));
-                result_TextArea.text+='<FONT COLOR="LightGreen">Using Python version ' + evaluate('solver.versionPython') + '.</FONT>'
-                console.log('SymPy version ' + evaluate('solver.versionSymPy') + evaluate('(" loaded in %f seconds." % solver.loadingtimeSymPy)'));
-                result_TextArea.text+='<FONT COLOR="LightGreen">SymPy version ' + evaluate('solver.versionSymPy') + evaluate('(" loaded in %f seconds." % solver.loadingtimeSymPy)') + '</FONT><br>'
-                */
+                notificationObj.notify(resultText + timerInfo)
             });
         }
         // shared via timerInfo with cover

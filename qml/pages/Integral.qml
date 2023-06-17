@@ -47,7 +47,6 @@ Page {
         z: 10
         timeout: 3000
         padding: Theme.paddingSmall
-        //defaultColor: page.secondaryHighlightColor
         defaultColor: Theme.highlightColor
         labelMargin: Theme.paddingSmall
     }
@@ -71,14 +70,6 @@ Page {
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
-            MenuItem {
-                text: qsTr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
-            }
-            MenuItem {
-                text: qsTr("Help")
-                onClicked: pageStack.push(Qt.resolvedUrl("HelpPage.qml"))
-            }
             MenuItem {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))

@@ -11,7 +11,16 @@ Page {
         anchors.fill: parent
         contentHeight: contentItem.childrenRect.height
         contentWidth: setttingsFlick.width
-
+        PullDownMenu {
+            MenuItem {
+                text: "About"
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+            }
+            MenuItem {
+                text: "Help"
+                onClicked: pageStack.push(Qt.resolvedUrl("HelpPage.qml"))
+            }
+        }
         VerticalScrollDecorator { flickable: setttingsFlick }
 
         Column {
@@ -24,7 +33,7 @@ Page {
             spacing: Theme.paddingSmall
 
             PageHeader {
-                title: qsTr('Derivative Settings')
+                title: qsTr('Solver Settings')
             }
             ComboBox {
                 id: orientation_ComboBox
