@@ -8,6 +8,11 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sat Jun 17 2023 Mark Washeim <blueprint@poetaster.de> - 0.4.0
+- [Release] docked, notifications, settings fixes
+- [Add]: add Docked panels for inputs on all interfaces, Notifications objects, Localstorage
+- [Release] obs/harbour
+
 * Wed Jun 14 2023 Mark Washeim <blueprint@poetaster.de> - 0.3.0
 - [Release] update versions, minor test updates, changes
 - [Feature] solve(Eq, Var) implemented
