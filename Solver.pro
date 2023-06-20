@@ -24,7 +24,8 @@ OTHER_FILES += qml/haroub-solver.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/HelpPage.qml \
-    qml/pages/derivative.py \
+    qml/pages/Carousel.qml \
+    qml/pages/Solver.qml \
     qml/pages/DejaVuSansMono.ttf \
     qml/js/strorage.js \
     rpm/harbour-solver.spec \
@@ -39,14 +40,10 @@ OTHER_FILES += qml/haroub-solver.qml \
 python.path = /usr/share/$${TARGET}/qml
 python.files = python
 
-libs.path = /usr/share/$${TARGET}
-libs.files = lib
+#libs.path = /usr/share/$${TARGET}
+#libs.files = lib
 
 INSTALLS += python
-INSTALLS += libs
+#INSTALLS += libs
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
-
-DISTFILES += \
-    qml/pages/Carousel.qml \
-    qml/pages/Solver.qml

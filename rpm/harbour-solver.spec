@@ -6,6 +6,7 @@
 Name:  harbour-solver
 
 # >> macros
+%define _binary_payload w2.xzdio
 %define __provides_exclude_from ^%{_datadir}/%{name}/lib/.*\\.so\\>
 %define __requires_exclude_from ^%{_datadir}/%{name}/lib/.*\\.so\\>
 # << macros
@@ -14,9 +15,10 @@ Name:  harbour-solver
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
+
 Summary:    Solver
 Version:    0.4.0
-Release:    1
+Release:    2
 Group:      Qt/Qt
 License:    GPLv3
 URL:        http://github.com/poetaster/Solver
@@ -24,8 +26,9 @@ Source0:    %{name}-%{version}.tar.bz2
 Requires:   libsailfishapp-launcher
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.2
-#Requires:   python3-sympy
-
+%if "%{?vendor}" == "chum"
+Requires:   python3-sympy
+%endif
 BuildRequires:  qt5-qttools-linguist
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.3
 BuildRequires:  pkgconfig(Qt5Core)
@@ -48,14 +51,15 @@ Categories:
  - Utility
 DeveloperName: Mark Washeim (poetaster)
 Custom:
- - Repo: https://github.com/sailfishos-chum/derivative-sailfish
-Icon: https://github.com/poetaster/Solver/blob/6f5085796699b9b71ba3d0609dc4b66de4dab933/icons/172x172/Solver.png
+ - Repo: https://github.com/github.com/poetaster/Solver
+Icon: https://raw.github.com/poetaster/Solver/main/icons/172x172/harbour-solver.png
 Screenshots:
- - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-1.png
- - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-2.png
- - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-3.png
+ - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-002.png
+ - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-003.png
+ - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-001.png
+Url:
+  Donation: https://www.paypal.me/poetasterFOSS
 %endif
-
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -87,6 +91,8 @@ desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
    %{buildroot}%{_datadir}/applications/*.desktop
 
+%if ! "%{?vendor}" == "chum"
+
 cd %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
 python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
 rm -rf  %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
@@ -99,6 +105,8 @@ rm -rf %{buildroot}/%{_datadir}/%{name}/share
 rm -rf %{buildroot}/%{_datadir}/%{name}/bin
 
 cd %_builddir
+
+%endif
 
 %files
 %defattr(-,root,root,-)
