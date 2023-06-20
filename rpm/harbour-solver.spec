@@ -91,7 +91,6 @@ desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
    %{buildroot}%{_datadir}/applications/*.desktop
 
-%if ! "%{?vendor}" == "chum"
 
 cd %{buildroot}%{_datadir}/%{name}/lib/sympy-1.9
 python3 setup.py install --root=%{buildroot} --prefix=%{_datadir}/%{name}/
@@ -106,7 +105,6 @@ rm -rf %{buildroot}/%{_datadir}/%{name}/bin
 
 cd %_builddir
 
-%endif
 
 %files
 %defattr(-,root,root,-)
