@@ -38,26 +38,6 @@ ApplicationWindow {
     initialPage: Component { Integral{} }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
-    /* strip var from the result formula to present */
-    function filterVariables(text) {
-        const re0 = /·/g;
-        const re1 = /π/g;
-        const re2 = /√/g;
-        const re3 = /φ/g;
-        // rad2deg in exprtk
-        const re5 = /deg/g;
-        // log is ln natural e in exprtk
-        const re6 = /ln/g;
-        const newtxt = text.replace(re0, "*")
-        newtxt = newtxt.replace(re1, "pi")
-        newtxt = newtxt.replace(re2, "sqrt")
-        newtxt = newtxt.replace(re3, "phi")
-        //newtxt = newtxt.replace(re5, "rad2deg")
-        //newtxt = newtxt.replace(re6, "log")
-        return newtxt
-    }
-
-
     Python {
         id: py
 

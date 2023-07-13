@@ -6,6 +6,8 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.2
 import "../components"
+import "../js/util.js" as Util
+
 Page {
     id: page
     function calculateResultIntegral() {

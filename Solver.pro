@@ -28,6 +28,7 @@ OTHER_FILES += qml/haroub-solver.qml \
     qml/pages/Solver.qml \
     qml/pages/DejaVuSansMono.ttf \
     qml/js/strorage.js \
+    qml/js/util.js \
     rpm/harbour-solver.spec \
     rpm/harbour-solver.changes \
     harbour-solver.desktop \
@@ -47,3 +48,6 @@ INSTALLS += python
 #INSTALLS += libs
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
+
+DISTFILES += \
+    qml/js/util.js
