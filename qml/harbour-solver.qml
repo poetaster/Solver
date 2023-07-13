@@ -32,11 +32,30 @@ ApplicationWindow {
     property string showEquator: 'true'
     property var notificationObj
     property var settingsObj
+    property string welcome: ''
 
     notificationObj: pageStack.currentPage.notification
     initialPage: Component { Integral{} }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
+    /* strip var from the result formula to present */
+    function filterVariables(text) {
+        const re0 = /·/g;
+        const re1 = /π/g;
+        const re2 = /√/g;
+        const re3 = /φ/g;
+        // rad2deg in exprtk
+        const re5 = /deg/g;
+        // log is ln natural e in exprtk
+        const re6 = /ln/g;
+        const newtxt = text.replace(re0, "*")
+        newtxt = newtxt.replace(re1, "pi")
+        newtxt = newtxt.replace(re2, "sqrt")
+        newtxt = newtxt.replace(re3, "phi")
+        //newtxt = newtxt.replace(re5, "rad2deg")
+        //newtxt = newtxt.replace(re6, "log")
+        return newtxt
+    }
 
 
     Python {
@@ -52,10 +71,11 @@ ApplicationWindow {
 
             // Asynchronous module importing
             importModule('solver', function() {
-                resultText='Python ' + evaluate('solver.versionPython') + '.\n'
-                resultText+='SymPy ' + evaluate('solver.versionSymPy') + '\n'
-                timerInfo = evaluate('("loaded in %fs" % solver.loadingtimeSymPy)')
-                notificationObj.notify(resultText + timerInfo)
+                welcome ='Python ' + evaluate('solver.versionPython') + '.\n'
+                welcome +='SymPy ' + evaluate('solver.versionSymPy') + '\n'
+                welcome += evaluate('("loaded in %fs" % solver.loadingtimeSymPy)')
+                // This is just anoying since it's slower to show than eval!
+                notificationObj.notify(welcome)
             });
         }
         // shared via timerInfo with cover
@@ -64,7 +84,7 @@ ApplicationWindow {
         }
 
         function engineLoadedHandler(){
-            notificationObj.notify("Symbolic engine loaded");
+            //notificationObj.notify(welcome);
             root.engineLoaded = true;
 
             //changeTrigonometricUnit(settingsObj.angleUnit);
