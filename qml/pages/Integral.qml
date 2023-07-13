@@ -379,7 +379,11 @@ Page {
                         id: copy_Button
                         width: parent.width * 1/3 - Theme.paddingLarge
                         text: qsTr("Copy")
-                        onClicked: Clipboard.text = result_TextArea.text
+                        onClicked: {
+                            Clipboard.text = result_TextArea.text
+                            notificationObj.notify("Copied!")
+                        }
+
                     }
                     Button {
                         id: calculate_Button
