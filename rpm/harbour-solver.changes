@@ -8,6 +8,15 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sat Jul 15 2023 Mark Washeim <blueprint@poetaster.de> - 0.4.1
+- [Release] small bug fixes on start notification, features
+- [Feature] add methods for ^ and sqrt shortcuts
+- [Feature] add notifications to copy operations
+
+* Tue Jun 20 2023 Mark Washeim <blueprint@poetaster.de> - 0.4.0-2
+- [Release] binary rpm format fix
+- [Release] meta fix and build options
+
 * Sat Jun 17 2023 Mark Washeim <blueprint@poetaster.de> - 0.4.0
 - [Release] docked, notifications, settings fixes
 - [Add]: add Docked panels for inputs on all interfaces, Notifications objects, Localstorage
