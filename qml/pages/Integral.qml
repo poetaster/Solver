@@ -12,8 +12,11 @@ Page {
     id: page
     function calculateResultIntegral() {
         result_TextArea.text = 'Calculating ...'
+
+        var integrand = Util.filterVariables(integrand_TextField.text)
+
         py.call('solver.calculate_Integral', [
-                    integrand_TextField.text,diff1_TextField.text,diff2_TextField.text,diff3_TextField.text,
+                    integrand,diff1_TextField.text,diff2_TextField.text,diff3_TextField.text,
                     limSup1_TextField.text,limSup2_TextField.text,limSup3_TextField.text,
                     limInf1_TextField.text,limInf2_TextField.text,limInf3_TextField.text,
                     integralType_index,numDimensions_index+1,numColumns,
@@ -66,7 +69,7 @@ Page {
 
         Component.onCompleted: {
             cName = "Integral"
-            result_TextArea.text = resultText
+            //result_TextArea.text = resultText
         }
         VerticalScrollDecorator { flickable: container }
 
@@ -108,7 +111,7 @@ Page {
                     font.family: dejavusansmono.name
                     font.pixelSize: Theme.fontSizeExtraSmall
                     color:'lightblue'
-                    placeholderText: "Integral calculation result"
+                    //placeholderText: "Integral calculation result"
                     text : 'Loading Python and SymPy ...'
                     Component.onCompleted: {
                         // _editor.textFormat = Text.RichText;
@@ -120,7 +123,7 @@ Page {
                     onTextChanged: {
                         if (debug) console.log(implicitHeight)
                         if (debug) console.log(implicitWidth)
-                        resultText = scaleText(text)
+                        resultText = scaleText(result_TextArea.text)
                         //height = implicitHeight
                     }
                     /* for the cover we scale font px values */

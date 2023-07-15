@@ -6,13 +6,17 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.5
 import "../components"
+import "../js/util.js" as Util
 Page {
     id: page
 
     allowedOrientations: derivativeScreenOrientation
     function calculateResultDerivative() {
         result_TextArea.text = 'Calculating ...'
-        py.call('solver.calculate_Derivative', [expression_TextField.text,var1_TextField.text,numVar1_TextField.text,var2_TextField.text,numVar2_TextField.text,var3_TextField.text,numVar3_TextField.text,numColumns,showDerivative,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
+
+        var expression = Util.filterVariables(expression_TextField.text)
+
+        py.call('solver.calculate_Derivative', [expression,var1_TextField.text,numVar1_TextField.text,var2_TextField.text,numVar2_TextField.text,var3_TextField.text,numVar3_TextField.text,numColumns,showDerivative,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
             result_TextArea.text = result;
         })
     }
@@ -126,8 +130,8 @@ Page {
                     width: parent.width
                     inputMethodHints: Qt.ImhNoAutoUppercase
                     label: qsTr("Expression")
-                    placeholderText: "sqrt(x/(x**3+1))"
-                    text: "x * sin(x**2) + 1"
+                    placeholderText: "sqrt(x/(x^3+1))"
+                    text: "x * sin(x^2) + 1"
                     EnterKey.enabled: text.length > 0
                     EnterKey.iconSource: "image://theme/icon-m-enter-next"
                     EnterKey.onClicked: var1_TextField.focus = true

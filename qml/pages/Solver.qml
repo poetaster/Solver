@@ -6,6 +6,8 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.5
 import "../components"
+import "../js/util.js" as Util
+
 Page {
     id: page
 
@@ -15,7 +17,9 @@ Page {
 
     function calculateResultSolver() {
         result_TextArea.text = 'Calculating ...'
-        py.call('solver.calculate_Solver', [expressionLeft.text,expressionRight.text,var1_TextField.text,var2_TextField.text,var3_TextField.text,numColumns,showEquator,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
+        var expressionL = Util.filterVariables(expressionLeft.text)
+        var expressionR = Util.filterVariables(expressionRight.text)
+        py.call('solver.calculate_Solver', [expressionL,expressionR,var1_TextField.text,var2_TextField.text,var3_TextField.text,numColumns,showEquator,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
             result_TextArea.text = result;
         })
     }
@@ -138,7 +142,7 @@ Page {
                         inputMethodHints: Qt.ImhNoAutoUppercase
                         label: qsTr("Exp. Left")
                         placeholderText: "6/(5-sqrt(x))"
-                        text: "a*x**2 + b*x + c"
+                        text: "a*x^2 + b*x + c"
                         EnterKey.enabled: text.length > 0
                         EnterKey.iconSource: "image://theme/icon-m-enter-next"
                         EnterKey.onClicked: expressionRight.focus = true

@@ -4,6 +4,7 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.2
 import "../components"
+import "../js/util.js" as Util
 
 Page {
     id: page
@@ -12,7 +13,8 @@ Page {
     property bool debug: false
     function calculateResultLimit() {
         result_TextArea.text = 'Calculating limit...'
-        py.call('solver.calculate_Limit', [expression_TextField.text,variable_TextField.text,point_TextField.text,direction_ComboBox.value,orientation!==Orientation.Landscape,showLimit,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
+        var expression = Util.filterVariables(expression_TextField.text)
+        py.call('solver.calculate_Limit', [expression,variable_TextField.text,point_TextField.text,direction_ComboBox.value,orientation!==Orientation.Landscape,showLimit,showTime,numerApprox,numDigText,simplifyResult_index,outputTypeResult_index], function(result) {
             result_TextArea.text = result;
         })
     }

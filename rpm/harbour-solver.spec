@@ -17,8 +17,8 @@ Name:  harbour-solver
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 
 Summary:    Solver
-Version:    0.4.0
-Release:    2
+Version:    0.4.1
+Release:    1
 Group:      Qt/Qt
 License:    GPLv3
 URL:        http://github.com/poetaster/Solver
