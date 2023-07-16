@@ -18,7 +18,7 @@ Name:  harbour-solver
 
 Summary:    Solver
 Version:    0.4.1
-Release:    1
+Release:    2
 Group:      Qt/Qt
 License:    GPLv3
 URL:        http://github.com/poetaster/Solver
