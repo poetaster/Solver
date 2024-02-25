@@ -51,7 +51,7 @@ Categories:
  - Utility
 DeveloperName: Mark Washeim (poetaster)
 Custom:
- - Repo: https://github.com/github.com/poetaster/Solver
+ - Repo: https://github.com/poetaster/Solver
 Icon: https://raw.github.com/poetaster/Solver/main/icons/172x172/harbour-solver.png
 Screenshots:
  - https://raw.githubusercontent.com/poetaster/Solver/main/screenshot-002.png
