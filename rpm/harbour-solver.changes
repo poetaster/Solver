@@ -7,6 +7,9 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Tue Sep 24 2024 Mark Washeim <blueprint@poetaster.de> -0.4.2
+- [Release] minor bug fixes
+-  ilpianista #2 bug vis chum
 
 * Sat Jul 15 2023 Mark Washeim <blueprint@poetaster.de> - 0.4.1
 - [Release] small bug fixes on start notification, features
