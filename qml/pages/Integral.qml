@@ -303,7 +303,7 @@ Page {
                             id: limSup1_TextField
                             visible: integralType_index > 0
                             width: diffs.width * 1/6
-                            inputMethodHints: Qt.ImhNoAutoUppercasle
+                            inputMethodHints: Qt.ImhNoAutoUppercase
                             text: '1'
                             EnterKey.enabled: text.length > 0
                             EnterKey.iconSource: "image://theme/icon-m-enter-next"

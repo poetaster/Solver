@@ -17,7 +17,7 @@ Name:  harbour-solver
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 
 Summary:    Solver
-Version:    0.4.1
+Version:    0.4.2
 Release:    2
 Group:      Qt/Qt
 License:    GPLv3
